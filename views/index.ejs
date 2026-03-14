@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="<%= lang %>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2b82ee',
+                        'sky-blue': '#87CEEB',
+                        'maya-blue': '#77B5FE',
+                        'soft-blue': '#f0f9ff',
+                        'dark-slate': '#1e293b',
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        outfit: ['Outfit', 'Noto Sans Bengali', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'slow-glow': 'glow 3s infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        glow: {
+                            '0%': { textShadow: '0 0 5px rgba(119, 181, 254, 0.2)' },
+                            '100%': { textShadow: '0 0 20px rgba(119, 181, 254, 0.6)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Outfit', 'Noto Sans Bengali', sans-serif; background-color: #ffffff; color: #1e293b; overflow-x: hidden; }
+        .cinzel-font { font-family: 'Cinzel', serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(119, 181, 254, 0.2); }
+        .text-gradient { background: linear-gradient(135deg, #1e3a8a, #2b82ee, #77B5FE); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .carousel-item { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease-in-out; }
+        .carousel-item.active { opacity: 1; }
+        .tilt-card { transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1); transform-style: preserve-3d; }
+        .tilt-card:hover { transform: rotateX(5deg) rotateY(-5deg) translateZ(20px); }
+        .state-active path { fill: #77B5FE !important; stroke: #fff !important; stroke-width: 2px !important; filter: drop-shadow(0 0 10px rgba(119, 181, 254, 0.8)); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .pin-container:hover .pop-tooltip { opacity: 1; }
+    </style>
+</head>
+<body class="custom-scrollbar selection:bg-primary/20">
+
+<!-- Navigation -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-4 px-6 md:px-12">
+    <div class="max-w-7xl mx-auto flex justify-between items-center bg-white/70 backdrop-blur-xl border border-blue-100/30 rounded-full px-6 py-2 shadow-lg shadow-blue-500/5">
+        <a href="#home" class="flex items-center gap-2 group">
+            <span class="material-symbols-outlined text-primary text-2xl group-hover:rotate-12 transition-transform">temple_hindu</span>
+            <span class="cinzel-font text-xl font-bold tracking-tight text-dark-slate"><%= lang === 'bn' ? 'ভূমিজ' : 'BHUMIJ' %></span>
+        </a>
+        
+        <div class="hidden md:flex items-center gap-1" id="navLinks">
+            <a href="#home" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'প্রচ্ছদ' : 'Home' %></a>
+            <a href="#etymology" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'ব্যুৎপত্তি' : 'Etymology' %></a>
+            <a href="#geography" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'ভূগোল' : 'Geography' %></a>
+            <a href="#culture" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'সংস্কৃতি' : 'Culture' %></a>
+            <a href="#history" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'সময়রেখা' : 'Timeline' %></a>
+            <a href="#people" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'ব্যক্তিত্ব' : 'Notable' %></a>
+            <a href="#articles" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'প্রবন্ধ' : 'Articles' %></a>
+            <a href="#gallery" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'গ্যালারি' : 'Gallery' %></a>
+            <a href="#members" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'সদস্য' : 'Members' %></a>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <!-- Language Switch -->
+            <div class="flex items-center bg-slate-100 rounded-full p-1">
+                <a href="?lang=en" class="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all <%= lang === 'en' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-slate-500 hover:text-primary' %>">EN</a>
+                <a href="?lang=bn" class="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all <%= lang === 'bn' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-slate-500 hover:text-primary' %>">বাং</a>
+            </div>
+            <button id="menuBtn" class="md:hidden flex p-2 text-slate-600">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+    <div id="heroCarousel" class="absolute inset-0 z-0">
+        <% if (heroSlides.length) { %>
+            <% heroSlides.forEach((slide, i) => { %>
+            <div class="carousel-item <%= i === 0 ? 'active' : '' %> bg-cover bg-center" style="background-image: linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0.2)), url('/uploads/<%= slide.image_path %>')"></div>
+            <% }) %>
+        <% } else { %>
+            <div class="carousel-item active" style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe, #f0f9ff);"></div>
+        <% } %>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 text-center lg:text-left w-full">
+        <div class="max-w-3xl space-y-8">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 rounded-full text-primary text-xs font-bold tracking-[.3em] uppercase">
+                <span class="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+                <%= lang === 'bn' ? (settingsMap.volume_info?.bn || settingsMap.volume_info?.en || '') : (settingsMap.volume_info?.en || '') %>
+            </div>
+            
+            <h1 class="cinzel-font text-6xl md:text-9xl font-black leading-[0.9] text-dark-slate tracking-tighter">
+                <% if (lang === 'bn') { %>
+                    ভূমিজ
+                <% } else { %>
+                    BHUMIJ
+                <% } %>
+            </h1>
+            
+            <p class="text-slate-600 text-lg md:text-xl font-light leading-relaxed max-w-2xl">
+                <%= lang === 'bn' ? (settingsMap.site_subtitle?.bn || '') : (settingsMap.site_subtitle?.en || '') %>
+            </p>
+            
+            <div class="flex flex-wrap gap-6 justify-center lg:justify-start pt-4">
+                <a href="#greetings" class="px-10 py-5 bg-primary text-white font-bold rounded-2xl hover:scale-105 hover:shadow-2xl hover:shadow-primary/30 transition-all flex items-center gap-3 group">
+                    <%= lang === 'bn' ? 'পড়ুন' : 'Read More' %>
+                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </a>
+                <a href="#gallery" class="flex items-center gap-3 text-dark-slate font-bold uppercase tracking-widest text-sm hover:text-primary transition-colors group">
+                    <span class="material-symbols-outlined text-4xl text-primary group-hover:scale-110 transition-transform">photo_library</span>
+                    <%= lang === 'bn' ? 'গ্যালারি দেখুন' : 'View Gallery' %>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carousel Indicators -->
+    <div class="absolute bottom-10 right-12 flex flex-col gap-4 z-20">
+        <div class="w-1.5 h-12 bg-slate-200 rounded-full overflow-hidden">
+            <div id="carouselProgress" class="w-full h-0 bg-primary transition-all duration-100 ease-linear"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Bar -->
+<section class="py-12 px-6">
+    <div class="max-w-7xl mx-auto bg-slate-50 border border-slate-100 rounded-[40px] p-10 grid grid-cols-1 md:grid-cols-3 gap-12 text-center shadow-inner">
+        <div class="space-y-2">
+            <div class="text-4xl lg:text-5xl font-black cinzel-font text-primary stat-num" data-target="<%= members.length %>">0</div>
+            <div class="text-xs font-bold uppercase tracking-widest text-slate-400"><%= lang === 'bn' ? 'বোর্ড সদস্য' : 'Board Members' %></div>
+        </div>
+        <div class="space-y-2 border-y md:border-y-0 md:border-x border-slate-200 py-8 md:py-0">
+            <div class="text-4xl lg:text-5xl font-black cinzel-font text-maya-blue stat-num" data-target="<%= articles.length %>">0</div>
+            <div class="text-xs font-bold uppercase tracking-widest text-slate-400"><%= lang === 'bn' ? 'প্রবন্ধ' : 'Articles' %></div>
+        </div>
+        <div class="space-y-2">
+            <div class="text-4xl lg:text-5xl font-black cinzel-font text-sky-blue stat-num" data-target="<%= poems.length %>">0</div>
+            <div class="text-xs font-bold uppercase tracking-widest text-slate-400"><%= lang === 'bn' ? 'কবিতা' : 'Poems' %></div>
+        </div>
+    </div>
+</section>
+
+<!-- Introduction Section -->
+<section class="py-24 px-6 bg-white relative">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center space-y-4 mb-16">
+            <span class="text-primary font-bold text-sm uppercase tracking-[0.3em]"><%= lang === 'bn' ? 'পরিচিতি' : 'About' %></span>
+            <h2 class="cinzel-font text-3xl md:text-6xl font-black text-dark-slate"><%= lang === 'bn' ? 'প্রকাশনা' : 'About This' %> <span class="text-gradient"><%= lang === 'bn' ? 'সম্পর্কে' : 'Publication' %></span></h2>
+            <div class="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+        </div>
+        <div class="max-w-3xl mx-auto text-center">
+            <p class="text-slate-600 text-lg leading-relaxed font-light">
+                <%= lang === 'bn' ? (settingsMap.introduction_bn?.bn || settingsMap.introduction_en?.en || '') : (settingsMap.introduction_en?.en || '') %>
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Etymology Section -->
+<% if (etymologyCards && etymologyCards.length) { %>
+<section id="etymology" class="py-24 px-6 bg-white relative">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center space-y-4 mb-20">
+            <span class="text-primary font-bold text-sm uppercase tracking-[0.3em]"><%= lang === 'bn' ? 'উৎপত্তি' : 'Origins' %></span>
+            <h2 class="cinzel-font text-3xl md:text-6xl font-black text-dark-slate"><%= lang === 'bn' ? 'ব্যুৎপত্তি ও' : 'Etymology &' %> <span class="text-gradient"><%= lang === 'bn' ? 'অর্থ' : 'Meaning' %></span></h2>
+            <div class="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <% etymologyCards.forEach((c, i) => { %>
+            <div class="p-10 <%= i === 1 ? 'bg-white border border-slate-100 shadow-xl shadow-slate-200/50 scale-105' : 'bg-soft-blue/30 border border-blue-50' %> rounded-[40px] hover:shadow-2xl hover:shadow-blue-500/10 transition-all group">
+                <div class="w-16 h-16 <%= i === 1 ? 'bg-primary' : 'bg-white' %> rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform mb-8">
+                    <span class="material-symbols-outlined <%= i === 1 ? 'text-white' : 'text-primary' %> text-3xl"><%= c.icon %></span>
+                </div>
+                <h3 class="cinzel-font text-2xl font-bold text-dark-slate mb-4"><%= t(c, 'title', lang) %></h3>
+                <p class="text-slate-600 leading-relaxed font-light"><%= t(c, 'content', lang) %></p>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+</section>
+<% } %>
+
+<!-- Geographic Core Section -->
+<% if (geoStates && geoStates.length) { %>
+<section id="geography" class="py-32 px-6 bg-slate-50 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col mb-20 space-y-4">
+            <span class="text-primary font-bold text-sm uppercase tracking-[0.4em]"><%= lang === 'bn' ? 'আঞ্চলিক উত্তরাধিকার' : 'Territorial Legacy' %></span>
+            <h2 class="cinzel-font text-4xl md:text-6xl font-black text-dark-slate"><%= lang === 'bn' ? 'ভৌগোলিক' : 'Geographic' %> <span class="text-gradient"><%= lang === 'bn' ? 'কেন্দ্র' : 'Core' %></span></h2>
+            <div class="w-24 h-1.5 bg-primary rounded-full"></div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+            <div class="lg:col-span-7 relative group w-full">
+                <div class="relative bg-white p-6 md:p-12 rounded-[40px] md:rounded-[60px] shadow-2xl border border-blue-50 overflow-hidden">
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(119,181,254,0.08)_0%,_transparent_75%)] pointer-events-none"></div>
+                    <div id="mapWrapper" class="relative z-10 filter drop-shadow-2xl max-w-full flex-grow flex items-center justify-center">
+                        <svg viewBox="0 0 800 650" class="w-full max-h-[500px] h-auto transition-transform duration-1000 group-hover:scale-[1.02]">
+                            <!-- Professional Detailed Map of East India (Jharkhand, WB, OR, BR, CH) -->
+                            <g class="map-layers opacity-40">
+                                <!-- Base Region Context (Simplified but accurate relative positions) -->
+                                <path d="M220 180 L350 140 L450 150 L580 120 L680 150 L750 250 L730 400 L650 500 L500 580 L300 560 L180 430 L160 300 Z" fill="#f8fafc" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 4"/>
+                                
+                                <!-- State Boundaries (Simulated Professional Detail) -->
+                                <path d="M300 250 Q 320 200 380 180 T 450 200 T 500 280 T 420 350 T 320 320 Z" fill="rgba(43, 130, 238, 0.05)" stroke="#2b82ee" stroke-width="0.5" id="path-jh"/>
+                                <path d="M480 220 Q 520 200 600 220 T 650 300 T 550 450 T 480 350 Z" fill="rgba(43, 130, 238, 0.02)" stroke="#2b82ee" stroke-width="0.5" id="path-wb"/>
+                                <path d="M250 350 Q 300 380 350 500 T 450 550 T 520 500 T 400 400 Z" fill="rgba(43, 130, 238, 0.02)" stroke="#2b82ee" stroke-width="0.5" id="path-or"/>
+                            </g>
+                            
+                            <% 
+                            // Precise Projection Logic for East India
+                            // Min/Max Lat/Lng bounded to Jharkhand, WB, Odisha, NE
+                            const minLat = 17, maxLat = 28;
+                            const minLng = 81, maxLng = 95;
+                            const svgW = 800, svgH = 650;
+                            
+                            geoStates.forEach(s => { 
+                                let px = s.text_x;
+                                let py = s.text_y;
+                                
+                                // Override with real Lat/Long if provided
+                                if (s.latitude && s.longitude) {
+                                    px = ((s.longitude - minLng) / (maxLng - minLng)) * svgW;
+                                    py = ((maxLat - s.latitude) / (maxLat - minLat)) * svgH;
+                                }
+                            %>
+                            <g id="state-<%= s.state_code %>" class="state-group cursor-pointer transition-all duration-500" onmouseenter="activateState('<%= s.state_code %>')" onmouseleave="deactivateState('<%= s.state_code %>')">
+                                <% if (s.svg_path) { %>
+                                    <path d="<%= s.svg_path %>" fill="#e2e8f0" stroke="#334155" stroke-width="1.5" class="transition-colors duration-500 hover:fill-primary/30"/>
+                                <% } %>
+                                <!-- Pin Positioned by Real Coordinates -->
+                                <g class="pin-container">
+                                    <circle cx="<%= px %>" cy="<%= py %>" r="8" fill="#2b82ee" class="animate-pulse shadow-lg"/>
+                                    <circle cx="<%= px %>" cy="<%= py %>" r="16" fill="none" stroke="#2b82ee" stroke-opacity="0.3" class="animate-ping"/>
+                                    
+                                    <text x="<%= px %>" y="<%= py - 15 %>" font-size="12" fill="#0f172a" font-weight="900" text-anchor="middle" class="cinzel-font pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <%= s.state_code.toUpperCase() %>
+                                    </text>
+                                    
+                                    <g class="pop-tooltip opacity-0 transition-opacity duration-300 pointer-events-none">
+                                        <rect x="<%= px - 45 %>" y="<%= py - 45 %>" width="100" height="25" rx="5" fill="#1e293b"/>
+                                        <text x="<%= px %>" y="<%= py - 28 %>" font-size="10" fill="#ffffff" font-weight="700" text-anchor="middle">
+                                            <%= lang === 'bn' ? 'জনসংখ্যা' : 'Pop' %>: <%= (lang === 'bn' ? (s.population_bn || s.population) : s.population) || 'N/A' %>
+                                        </text>
+                                    </g>
+                                </g>
+                            </g>
+                            <% }) %>
+                        </svg>
+                    </div>
+                    <div class="mt-8 lg:absolute lg:bottom-10 lg:left-10 p-6 glass-card rounded-3xl shadow-xl max-w-sm border-blue-100/50 z-20">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-2 h-8 bg-primary rounded-full"></div>
+                            <h4 id="mapTitle" class="cinzel-font font-bold text-dark-slate text-lg uppercase tracking-widest"><%= lang === 'bn' ? 'পূর্বাঞ্চলীয় কেন্দ্রভূমি' : 'Eastern Heartland' %></h4>
+                        </div>
+                        <p id="mapDesc" class="text-sm text-slate-500 leading-relaxed font-light mb-4"><%= lang === 'bn' ? 'ভূমিজ উপজাতির প্রধান বসতি করিডোর প্রদর্শনকারী ইন্টারেক্টিভ হেরিটেজ মানচিত্র। অঞ্চলগুলোর উপর হোভার করুন।' : 'Interactive heritage map showcasing the primary settlement corridors of the Bhumij tribe. Hover over regions to explore.' %></p>
+                        
+                        <div id="mapImgContainer" class="hidden overflow-hidden rounded-2xl border-2 border-primary/10 shadow-lg">
+                            <img id="mapInfoImg" src="" class="w-full h-32 object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 perspective-1000">
+                <% geoStates.forEach((s, i) => { %>
+                <div id="card-<%= s.state_code %>" class="tilt-card group relative h-[280px] md:h-[320px] rounded-[40px] overflow-hidden shadow-xl border border-white hover:border-primary/20 transition-all cursor-pointer <%= i % 2 !== 0 ? 'mt-0 sm:mt-12' : '' %>" onmouseenter="activateState('<%= s.state_code %>')" onmouseleave="deactivateState('<%= s.state_code %>')">
+                    <% if (s.image_path) { %>
+                    <img src="/uploads/<%= s.image_path %>" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
+                    <% } else { %>
+                    <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-maya-blue/40"></div>
+                    <% } %>
+                    <div class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-dark-slate/90 to-transparent"></div>
+                    <div class="absolute bottom-6 left-8 z-10">
+                        <h3 class="cinzel-font text-2xl font-black text-white"><%= t(s, 'name', lang) %></h3>
+                        <p class="text-maya-blue text-[10px] font-black uppercase tracking-widest mt-1"><%= t(s, 'subtitle', lang) %></p>
+                    </div>
+                </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+</section>
+<% } %>
+
+<!-- Government Initiatives Section -->
+<% if (initiatives && initiatives.length) { %>
+<section class="py-24 px-6 bg-white">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+            <div class="space-y-4">
+                <span class="text-primary font-bold text-sm uppercase tracking-[0.3em]"><%= lang === 'bn' ? 'ক্ষমতায়ন' : 'Empowerment' %></span>
+                <h2 class="cinzel-font text-3xl md:text-5xl font-black text-dark-slate"><%= lang === 'bn' ? 'সরকারি' : 'Government' %> <span class="text-gradient"><%= lang === 'bn' ? 'উদ্যোগ' : 'Initiatives' %></span></h2>
+            </div>
+            <p class="max-w-md text-slate-500 font-light italic"><%= lang === 'bn' ? 'ভূমিজ সম্প্রদায়কে রক্ষা, সংরক্ষণ ও ক্ষমতায়নের জন্য নীতি ও কর্মসূচি।' : 'Policies and programs designed to protect, preserve, and empower the Bhumij community.' %></p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <% initiatives.forEach(n => { %>
+            <div class="p-8 bg-slate-50 border border-slate-100 rounded-[40px] hover:bg-white hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/20 transition-all group">
+                <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all mb-6">
+                    <span class="material-symbols-outlined"><%= n.icon %></span>
+                </div>
+                <h3 class="text-xl font-bold text-dark-slate mb-3 group-hover:text-primary transition-colors"><%= t(n, 'title', lang) %></h3>
+                <p class="text-slate-500 text-sm leading-relaxed mb-6"><%= t(n, 'content', lang) %></p>
+                <% if (n.features_en || n.features_bn) { %>
+                <ul class="space-y-2">
+                    <% const features = (lang === 'bn' && n.features_bn ? n.features_bn : n.features_en || '').split('|'); %>
+                    <% features.forEach(f => { %>
+                    <li class="flex items-center gap-2 text-xs font-medium text-slate-600"><span class="w-1.5 h-1.5 rounded-full bg-primary/40"></span> <%= f.trim() %></li>
+                    <% }) %>
+                </ul>
+                <% } %>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+</section>
+<% } %>
+
+<!-- Culture & Heritage Section -->
+<% if (cultureCards && cultureCards.length) { %>
+<section id="culture" class="py-24 px-6 bg-soft-blue/20">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center space-y-4 mb-20">
+            <span class="text-primary font-bold text-sm uppercase tracking-[0.3em]"><%= lang === 'bn' ? 'আধ্যাত্মিক ও সামাজিক' : 'Spiritual & Social' %></span>
+            <h2 class="cinzel-font text-3xl md:text-6xl font-black text-dark-slate"><%= lang === 'bn' ? 'সংস্কৃতি ও' : 'Culture &' %> <span class="text-gradient"><%= lang === 'bn' ? 'ঐতিহ্য' : 'Heritage' %></span></h2>
+            <div class="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <% cultureCards.forEach(c => { %>
+            <div class="bg-white rounded-[40px] overflow-hidden shadow-xl shadow-blue-500/5 group">
+                <% if (c.image_url) { %>
+                <div class="h-48 overflow-hidden relative">
+                    <img src="<%= c.image_url %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div class="absolute inset-x-0 bottom-0 h-2 bg-<%= c.color || 'primary' %>"></div>
+                </div>
+                <% } else { %>
+                <div class="h-3 bg-gradient-to-r from-primary via-maya-blue to-sky-blue"></div>
+                <% } %>
+                <div class="p-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="material-symbols-outlined text-<%= c.color || 'primary' %>"><%= c.icon %></span>
+                        <h3 class="cinzel-font text-xl font-bold text-dark-slate tracking-wide"><%= t(c, 'title', lang) %></h3>
+                    </div>
+                    <p class="text-slate-500 text-sm leading-relaxed"><%= t(c, 'content', lang) %></p>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+</section>
+<% } %>
+
+<!-- Historical Timeline Section -->
+<% if (timelineEvents && timelineEvents.length) { %>
+<section id="history" class="py-24 px-6 bg-white overflow-hidden">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center space-y-4 mb-20">
+            <span class="text-primary font-bold text-sm uppercase tracking-[0.3em]"><%= lang === 'bn' ? 'যুগান্তর' : 'Ages Passed' %></span>
+            <h2 class="cinzel-font text-3xl md:text-5xl font-black text-dark-slate"><%= lang === 'bn' ? 'ঐতিহাসিক' : 'Historical' %> <span class="text-gradient"><%= lang === 'bn' ? 'সময়রেখা' : 'Timeline' %></span></h2>
+        </div>
+        <div class="relative space-y-12">
+            <div class="absolute left-[20px] md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-primary via-maya-blue to-soft-blue rounded-full"></div>
+            <% timelineEvents.forEach((e, i) => { %>
+            <div class="relative flex flex-col <%= i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse' %> items-start md:items-center justify-between group">
+                <div class="hidden md:block w-[45%] <%= i % 2 === 0 ? 'text-right' : 'text-left' %> bg-slate-50 p-6 rounded-3xl border border-slate-100 opacity-60 group-hover:opacity-100 transition-all shadow-sm">
+                    <p class="text-slate-500 italic text-sm"><%= t(e, 'description', lang) %></p>
+                </div>
+                <div class="absolute left-[-2px] md:left-1/2 -translate-x-1/2 w-11 h-11 bg-white border-4 <%= i === 0 ? 'border-primary' : i === 1 ? 'border-maya-blue' : i === 2 ? 'border-primary' : 'border-sky-blue' %> rounded-full z-10 flex items-center justify-center shadow-lg group-hover:scale-110 transition-all">
+                    <span class="text-[10px] font-black <%= i === 0 ? 'text-primary' : i === 1 ? 'text-maya-blue' : i === 2 ? 'text-primary' : 'text-sky-blue' %> uppercase"><%= e.period_code %></span>
+                </div>
+                <div class="md:w-[45%] pl-14 md:pl-0 space-y-2 <%= i % 2 !== 0 ? 'text-left md:text-right' : '' %>">
+                    <div class="inline-block px-3 py-1 bg-blue-50 rounded-full text-[10px] font-bold <%= i === 0 ? 'text-primary' : i === 1 ? 'text-maya-blue' : i === 2 ? 'text-primary' : 'text-sky-blue' %> uppercase tracking-widest"><%= t(e, 'period_label', lang) %></div>
+                    <h3 class="cinzel-font text-xl font-bold text-dark-slate"><%= t(e, 'title', lang) %></h3>
+                    <p class="md:hidden text-slate-500 text-sm"><%= t(e, 'description', lang) %></p>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+</section>
+<% } %>
+
+<!-- Notable People Section -->
+<% if (notablePeople && notablePeople.length) { %>
+<section id="people" class="py-24 px-6 bg-slate-50">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center space-y-4 mb-20">
+            <span class="text-primary font-bold text-sm uppercase tracking-[0.3em]"><%= lang === 'bn' ? 'অমর নেতৃবৃন্দ' : 'Eternal Leaders' %></span>
+            <h2 class="cinzel-font text-3xl md:text-6xl font-black text-dark-slate"><%= lang === 'bn' ? 'উল্লেখযোগ্য' : 'Notable' %> <span class="text-gradient"><%= lang === 'bn' ? 'ব্যক্তিত্ব' : 'People' %></span></h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <% notablePeople.forEach(p => { %>
+            <div class="p-8 bg-white rounded-[40px] shadow-sm hover:shadow-2xl transition-all text-center border border-slate-100 group">
+                <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-blue-50 shadow-lg group-hover:scale-105 transition-transform mb-6 relative">
+                    <% if (p.image_path) { %>
+                    <img src="/uploads/<%= p.image_path %>" class="w-full h-full object-cover">
+                    <% } else { %>
+                    <div class="w-full h-full bg-gradient-to-br from-primary to-maya-blue flex items-center justify-center">
+                        <span class="text-white text-4xl font-black cinzel-font"><%= (t(p, 'name', lang) || 'N')[0] %></span>
+                    </div>
+                    <% } %>
+                </div>
+                <h3 class="cinzel-font text-xl font-bold text-dark-slate"><%= t(p, 'name', lang) %></h3>
+                <p class="text-primary text-[10px] font-black uppercase tracking-widest mt-1 mb-3"><%= t(p, 'title', lang) %></p>
+                <p class="text-slate-400 text-xs leading-relaxed italic"><%= t(p, 'description', lang) %></p>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+</section>
+<% } %>
+<% if (greetings.length) { %>
+<section id="greetings" class="py-24 px-6 bg-soft-blue/20">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center space-y-4 mb-20">
+            <span class="text-primary font-bold text-sm uppercase tracking-[0.3em]"><%= lang === 'bn' ? 'শুভেচ্ছা বার্তা' : 'Messages' %></span>
+            <h2 class="cinzel-font text-3xl md:text-6xl font-black text-dark-slate"><%= lang === 'bn' ? 'শুভেচ্ছা' : 'Greeting' %> <span class="text-gradient"><%= lang === 'bn' ? 'বার্তা' : 'Messages' %></span></h2>
+            <div class="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+            <p class="text-slate-500 font-light max-w-lg mx-auto"><%= lang === 'bn' ? 'গণ্যমান্য ব্যক্তিবর্গের শুভেচ্ছা বার্তা' : 'Messages from distinguished dignitaries' %></p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <% greetings.forEach(g => { %>
+            <a href="/greeting/<%= g.id %>" class="bg-white rounded-[40px] overflow-hidden shadow-xl shadow-blue-500/5 group hover:shadow-2xl transition-all border border-slate-100 block">
+                <div class="p-8">
+                    <div class="flex items-center gap-4 mb-6">
+                        <% if (g.image_path) { %>
+                        <div class="w-20 h-20 rounded-2xl overflow-hidden border-4 border-blue-50 shadow-lg group-hover:scale-105 transition-transform flex-shrink-0">
+                            <img src="/uploads/<%= g.image_path %>" alt="<%= t(g, 'person_name', lang) %>" class="w-full h-full object-cover">
+                        </div>
+                        <% } else { %>
+                        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-maya-blue flex items-center justify-center flex-shrink-0 shadow-lg">
+                            <span class="text-white text-3xl font-black cinzel-font"><%= (t(g, 'person_name', lang) || 'N')[0] %></span>
+                        </div>
+                        <% } %>
+                        <div>
+                            <h3 class="cinzel-font text-lg font-bold text-dark-slate"><%= t(g, 'person_name', lang) %></h3>
+                            <p class="text-primary text-[11px] font-bold uppercase tracking-widest mt-1"><%= t(g, 'designation', lang) %></p>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <span class="absolute -top-2 -left-2 text-6xl text-primary/10 font-serif">"</span>
+                        <p class="text-slate-500 text-sm leading-relaxed font-light pl-6"><%= t(g, 'message', lang) ? t(g, 'message', lang).substring(0, 350) + '...' : '' %></p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-50 flex items-center gap-2 text-primary text-xs font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
+                        <span><%= lang === 'bn' ? 'সম্পূর্ণ পড়ুন' : 'Read Full Message' %></span>
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </div>
+                </div>
+            </a>
+            <% }) %>
+        </div>
+    </div>
+</section>
+<% } %>
+
+<!-- Articles Section -->
+<% if (articles.length) { %>
+<section id="articles" class="py-24 px-6 bg-white">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+            <div class="space-y-4">
+                <span class="text-primary font-bold text-sm uppercase tracking-[0.3em]"><%= lang === 'bn' ? 'প্রবন্ধ ও ইতিহাস' : 'Knowledge' %></span>
+                <h2 class="cinzel-font text-3xl md:text-5xl font-black text-dark-slate"><%= lang === 'bn' ? 'প্রবন্ধ ও' : 'Articles &' %> <span class="text-gradient"><%= lang === 'bn' ? 'ইতিহাস' : 'History' %></span></h2>
+            </div>
+            <p class="max-w-md text-slate-500 font-light italic"><%= lang === 'bn' ? 'ভূমিজ সম্প্রদায়ের ইতিহাস, সংস্কৃতি ও ঐতিহ্য' : 'History, culture, and heritage of the Bhumij community' %></p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <% articles.forEach(a => { %>
+            <a href="/article/<%= a.slug %>" class="p-8 bg-slate-50 border border-slate-100 rounded-[40px] hover:bg-white hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/20 transition-all group">
+                <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all mb-6">
+                    <span class="material-symbols-outlined"><%= a.article_type === 'history' ? 'history_edu' : a.article_type === 'biography' ? 'person' : a.article_type === 'script' ? 'translate' : 'article' %></span>
+                </div>
+                <h3 class="text-xl font-bold text-dark-slate mb-3 group-hover:text-primary transition-colors"><%= t(a, 'title', lang) %></h3>
+                <p class="text-slate-500 text-sm leading-relaxed mb-6"><%= t(a, 'content', lang) ? t(a, 'content', lang).substring(0, 120) + '...' : '' %></p>
+                <div class="flex items-center gap-2 text-xs font-bold text-primary uppercase tracking-widest">
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary/40"></span> <%= a.article_type %>
+                </div>
+            </a>
+            <% }) %>
+        </div>
+    </div>
+</section>
+<% } %>
+
+<!-- Poems Section -->
+<% if (poems.length) { %>
+<section id="poems" class="py-24 px-6 bg-soft-blue/20">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center space-y-4 mb-20">
+            <span class="text-primary font-bold text-sm uppercase tracking-[0.3em]"><%= lang === 'bn' ? 'সাহিত্য' : 'Literature' %></span>
+            <h2 class="cinzel-font text-3xl md:text-6xl font-black text-dark-slate"><%= lang === 'bn' ? 'কবিতা ও' : 'Poems &' %> <span class="text-gradient"><%= lang === 'bn' ? 'সাহিত্য' : 'Literature' %></span></h2>
+            <div class="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <% poems.forEach(p => { %>
+            <div class="bg-white rounded-[40px] overflow-hidden shadow-xl shadow-blue-500/5 group hover:shadow-2xl transition-all border border-slate-100">
+                <div class="h-3 bg-gradient-to-r from-primary via-maya-blue to-sky-blue"></div>
+                <div class="p-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="material-symbols-outlined text-primary">edit_note</span>
+                        <h3 class="cinzel-font text-xl font-bold text-dark-slate tracking-wide"><%= t(p, 'title', lang) %></h3>
+                    </div>
+                    <pre class="text-slate-500 text-sm leading-relaxed font-light whitespace-pre-line font-['Outfit','Noto_Sans_Bengali',sans-serif]"><%= t(p, 'content', lang) %></pre>
+                    <div class="mt-6 pt-4 border-t border-slate-100 text-right">
+                        <span class="text-primary text-sm font-bold italic">— <%= t(p, 'author', lang) %></span>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+</section>
+<% } %>
+
+<!-- Meetings Timeline -->
+<% if (meetings.length) { %>
+<section id="meetings" class="py-24 px-6 bg-white overflow-hidden">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center space-y-4 mb-20">
+            <span class="text-primary font-bold text-sm uppercase tracking-[0.3em]"><%= lang === 'bn' ? 'বৈঠক' : 'Proceedings' %></span>
+            <h2 class="cinzel-font text-3xl md:text-5xl font-black text-dark-slate"><%= lang === 'bn' ? 'বোর্ড' : 'Board' %> <span class="text-gradient"><%= lang === 'bn' ? 'বৈঠক' : 'Meetings' %></span></h2>
+        </div>
+        <div class="relative space-y-12">
+            <div class="absolute left-[20px] md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-primary via-maya-blue to-soft-blue rounded-full"></div>
+            <% meetings.forEach((m, i) => { %>
+            <div class="relative flex flex-col <%= i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse' %> items-start md:items-center justify-between group">
+                <div class="hidden md:block w-[45%] <%= i % 2 === 0 ? 'text-right' : 'text-left' %> bg-slate-50 p-6 rounded-3xl border border-slate-100 opacity-60 group-hover:opacity-100 transition-all shadow-sm">
+                    <p class="text-slate-500 italic text-sm"><%= t(m, 'content', lang) ? t(m, 'content', lang).substring(0, 200) : '' %></p>
+                </div>
+                <div class="absolute left-[-2px] md:left-1/2 -translate-x-1/2 w-11 h-11 bg-white border-4 border-primary rounded-full z-10 flex items-center justify-center shadow-lg group-hover:scale-110 transition-all">
+                    <span class="text-[10px] font-black text-primary uppercase"><%= m.meeting_number %></span>
+                </div>
+                <div class="md:w-[45%] pl-14 md:pl-0 space-y-2 <%= i % 2 !== 0 ? 'text-left md:text-right' : '' %>">
+                    <div class="inline-block px-3 py-1 bg-blue-50 rounded-full text-[10px] font-bold text-primary uppercase tracking-widest"><%= m.meeting_date %></div>
+                    <h3 class="cinzel-font text-xl font-bold text-dark-slate"><%= t(m, 'title', lang) %></h3>
+                    <p class="md:hidden text-slate-500 text-sm"><%= t(m, 'content', lang) ? t(m, 'content', lang).substring(0, 150) : '' %></p>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+</section>
+<% } %>
+
+<!-- Gallery Section -->
+<% if (galleryImages.length) { %>
+<section id="gallery" class="py-24 px-6 bg-slate-50">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center space-y-4 mb-20">
+            <span class="text-primary font-bold text-sm uppercase tracking-[0.3em]"><%= lang === 'bn' ? 'ফটো সংকলন' : 'Visual Archive' %></span>
+            <h2 class="cinzel-font text-3xl md:text-6xl font-black text-dark-slate"><%= lang === 'bn' ? 'ফটো' : 'Photo' %> <span class="text-gradient"><%= lang === 'bn' ? 'গ্যালারি' : 'Gallery' %></span></h2>
+            <div class="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="flex flex-wrap justify-center gap-3 mb-12">
+            <button class="gallery-filter active px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest border transition-all bg-primary text-white border-primary" data-filter="all"><%= lang === 'bn' ? 'সব' : 'All' %></button>
+            <% categories.forEach(c => { %>
+            <button class="gallery-filter px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest border transition-all bg-white text-slate-500 border-slate-200 hover:border-primary hover:text-primary" data-filter="cat-<%= c.id %>"><%= t(c, 'name', lang) %></button>
+            <% }) %>
+        </div>
+
+        <div class="flex overflow-x-auto gap-6 pb-12 snap-x no-scrollbar scroll-smooth" id="galleryGrid">
+            <% galleryImages.forEach(img => { %>
+            <a href="/gallery/image/<%= img.id %>" class="gallery-img flex-shrink-0 w-80 group relative rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all cursor-pointer aspect-square snap-center" data-category="cat-<%= img.category_id %>">
+                <img src="/uploads/<%= img.image_path %>" alt="<%= t(img, 'caption', lang) %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy">
+                <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-dark-slate/90 via-dark-slate/40 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    <p class="text-white text-sm font-bold tracking-wide"><%= t(img, 'caption', lang) %></p>
+                    <div class="w-8 h-1 bg-primary mt-2 rounded-full"></div>
+                </div>
+            </a>
+            <% }) %>
+        </div>
+    </div>
+</section>
+<% } %>
+
+<!-- Board Members Section -->
+<% if (members.length) { %>
+<section id="members" class="py-24 px-6 bg-white">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center space-y-4 mb-20">
+            <span class="text-primary font-bold text-sm uppercase tracking-[0.3em]"><%= lang === 'bn' ? 'পর্ষদ পরিচালনা' : 'Board Leadership' %></span>
+            <h2 class="cinzel-font text-3xl md:text-6xl font-black text-dark-slate"><%= lang === 'bn' ? 'সদস্য' : 'Board' %> <span class="text-gradient"><%= lang === 'bn' ? 'তালিকা' : 'Members' %></span></h2>
+            <div class="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+        </div>
+        
+        <div class="bg-white rounded-[40px] shadow-xl border border-slate-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-100">
+                            <th class="px-6 py-4 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400"><%= lang === 'bn' ? 'ক্রমিক' : 'Sl.' %></th>
+                            <th class="px-6 py-4 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400"><%= lang === 'bn' ? 'নাম' : 'Name' %></th>
+                            <th class="px-6 py-4 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400"><%= lang === 'bn' ? 'পদবি' : 'Designation' %></th>
+                            <th class="px-6 py-4 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 hidden md:table-cell"><%= lang === 'bn' ? 'ঠিকানা' : 'Address' %></th>
+                            <th class="px-6 py-4 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 hidden sm:table-cell"><%= lang === 'bn' ? 'ফোন' : 'Phone' %></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% members.forEach(m => { %>
+                        <tr class="border-b border-slate-50 hover:bg-soft-blue/30 transition-colors">
+                            <td class="px-6 py-4 text-sm font-bold text-primary"><%= m.sl_no %></td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <% if (m.image_path) { %>
+                                    <img src="/uploads/<%= m.image_path %>" class="w-10 h-10 rounded-full object-cover border-2 border-primary/10 shadow-sm">
+                                    <% } else { %>
+                                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                                        <span class="material-symbols-outlined text-sm">person</span>
+                                    </div>
+                                    <% } %>
+                                    <span class="text-sm font-bold text-dark-slate"><%= t(m, 'name', lang) %></span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-primary font-medium"><%= t(m, 'designation', lang) %></td>
+                            <td class="px-6 py-4 text-sm text-slate-500 font-light hidden md:table-cell"><%= t(m, 'address', lang) %></td>
+                            <td class="px-6 py-4 text-sm text-slate-500 hidden sm:table-cell"><%= m.phone %></td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+<% } %>
+
+<!-- Footer -->
+<footer class="relative bg-[#0a111a] pt-32 pb-12 px-6 overflow-hidden">
+    <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(#77B5FE 1px, transparent 1px); background-size: 30px 30px;"></div>
+    <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
+            <!-- Branding -->
+            <div class="space-y-8">
+                <a href="#" class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+                        <span class="material-symbols-outlined text-white text-3xl">temple_hindu</span>
+                    </div>
+                    <span class="cinzel-font text-2xl font-bold text-white tracking-widest"><%= lang === 'bn' ? 'ভূমিজ' : 'BHUMIJ' %></span>
+                </a>
+                <p class="text-slate-400 font-light leading-relaxed">
+                    <%= lang === 'bn' ? (settingsMap.footer_text?.bn || '') : (settingsMap.footer_text?.en || '') %>
+                </p>
+            </div>
+
+            <!-- Navigation -->
+            <div class="space-y-6">
+                <h4 class="cinzel-font text-lg font-bold text-white uppercase tracking-widest border-b border-primary/20 pb-2 inline-block"><%= lang === 'bn' ? 'দ্রুত লিঙ্ক' : 'Explore' %></h4>
+                <ul class="space-y-4">
+                    <li><a href="#greetings" class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:w-4 transition-all"></span> <%= lang === 'bn' ? 'শুভেচ্ছা বার্তা' : 'Greetings' %></a></li>
+                    <li><a href="#articles" class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:w-4 transition-all"></span> <%= lang === 'bn' ? 'প্রবন্ধ' : 'Articles' %></a></li>
+                    <li><a href="#poems" class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:w-4 transition-all"></span> <%= lang === 'bn' ? 'কবিতা' : 'Poems' %></a></li>
+                    <li><a href="#members" class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:w-4 transition-all"></span> <%= lang === 'bn' ? 'সদস্য' : 'Members' %></a></li>
+                    <li><a href="#gallery" class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:w-4 transition-all"></span> <%= lang === 'bn' ? 'গ্যালারি' : 'Gallery' %></a></li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div class="space-y-6">
+                <h4 class="cinzel-font text-lg font-bold text-white uppercase tracking-widest border-b border-primary/20 pb-2 inline-block"><%= lang === 'bn' ? 'যোগাযোগ' : 'Contact' %></h4>
+                <p class="text-slate-400 text-sm leading-relaxed"><%= lang === 'bn' ? (settingsMap.contact_address?.bn || '') : (settingsMap.contact_address?.en || '') %></p>
+            </div>
+
+            <!-- Published By -->
+            <div class="space-y-6">
+                <h4 class="cinzel-font text-lg font-bold text-white uppercase tracking-widest border-b border-primary/20 pb-2 inline-block"><%= lang === 'bn' ? 'প্রকাশক' : 'Published By' %></h4>
+                <p class="text-slate-400 text-sm leading-relaxed"><%= lang === 'bn' ? (settingsMap.prepared_by?.bn || '') : (settingsMap.prepared_by?.en || '') %></p>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                &copy; 2026 <%= lang === 'bn' ? 'পশ্চিমবঙ্গ ভূমিজ উন্নয়ন পর্ষদ — সর্বস্বত্ব সংরক্ষিত' : 'West Bengal Bhumij Development Board — All Rights Reserved' %>
+            </p>
+            <div class="flex items-center gap-3">
+                <a href="/admin" class="text-[10px] font-bold text-slate-500 uppercase tracking-widest hover:text-primary transition-colors">Admin</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Hero Carousel
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.carousel-item');
+    const count = slides.length;
+    const progress = document.getElementById('carouselProgress');
+    
+    function nextSlide() {
+        if (count <= 1) return;
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % count;
+        slides[currentSlide].classList.add('active');
+        resetProgress();
+    }
+
+    function resetProgress() {
+        if (!progress) return;
+        progress.style.transition = 'none';
+        progress.style.height = '0%';
+        setTimeout(() => {
+            progress.style.transition = 'height 5s linear';
+            progress.style.height = '100%';
+        }, 50);
+    }
+
+    if (count > 1) {
+        setInterval(nextSlide, 5000);
+        resetProgress();
+    }
+
+    // Stats Counter
+    const stats = document.querySelectorAll('.stat-num');
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = parseInt(entry.target.getAttribute('data-target'));
+                let current = 0;
+                const increment = Math.max(target / 50, 1);
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        entry.target.innerText = target.toLocaleString();
+                        clearInterval(timer);
+                    } else {
+                        entry.target.innerText = Math.floor(current).toLocaleString();
+                    }
+                }, 30);
+                statsObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    stats.forEach(stat => statsObserver.observe(stat));
+
+    // Gallery Auto-scroll
+    const galleryGrid = document.getElementById('galleryGrid');
+    let scrollInterval;
+    const startAutoScroll = () => {
+        scrollInterval = setInterval(() => {
+            if (galleryGrid.scrollLeft + galleryGrid.offsetWidth >= galleryGrid.scrollWidth) {
+                galleryGrid.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                galleryGrid.scrollBy({ left: 340, behavior: 'smooth' });
+            }
+        }, 3000);
+    };
+    const stopAutoScroll = () => clearInterval(scrollInterval);
+    
+    if (galleryGrid) {
+        startAutoScroll();
+        galleryGrid.addEventListener('mouseenter', stopAutoScroll);
+        galleryGrid.addEventListener('mouseleave', startAutoScroll);
+    }
+</script>
+
+<!-- Map Data (Hidden for JS ingestion) -->
+<div id="stateDataMap" style="display:none;" data-json='<%- JSON.stringify(geoStates.reduce((acc, s) => { acc[s.state_code] = { title: lang === "bn" ? (s.name_bn || s.name_en) : s.name_en, desc: lang === "bn" ? (s.description_bn || s.description_en) : s.description_en, img: s.image_path, pop: s.population, lat: s.latitude, lng: s.longitude }; return acc; }, {})) %>'></div>
+
+<script>
+    // Map Interactions
+    const stateDataEl = document.getElementById('stateDataMap');
+    const stateData = stateDataEl ? JSON.parse(stateDataEl.dataset.json) : {};
+
+    function activateState(id) {
+        document.querySelectorAll('.state-group').forEach(el => el.classList.remove('state-active'));
+        const stateEl = document.getElementById('state-' + id);
+        if (stateEl) stateEl.classList.add('state-active');
+        document.querySelectorAll('.tilt-card').forEach(el => el.classList.remove('ring-4', 'ring-primary/20', 'scale-105'));
+        const card = document.getElementById('card-' + id);
+        if (card) { 
+            card.classList.add('ring-4', 'ring-primary/20', 'scale-105'); 
+            card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+        if (stateData[id]) {
+            const mt = document.getElementById('mapTitle');
+            const md = document.getElementById('mapDesc');
+            const mic = document.getElementById('mapImgContainer');
+            const mii = document.getElementById('mapInfoImg');
+            
+            if (mt) mt.innerText = stateData[id].title;
+            if (md) md.innerText = stateData[id].desc;
+            
+            if (mic && mii && stateData[id].img) {
+                mii.src = '/uploads/' + stateData[id].img;
+                mic.classList.remove('hidden');
+            } else if (mic) {
+                mic.classList.add('hidden');
+            }
+        }
+    }
+    function deactivateState(id) {}
+
+    // Gallery Filter
+    document.querySelectorAll('.gallery-filter').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.gallery-filter').forEach(b => {
+                b.classList.remove('bg-primary', 'text-white', 'border-primary');
+                b.classList.add('bg-white', 'text-slate-500', 'border-slate-200');
+            });
+            this.classList.remove('bg-white', 'text-slate-500', 'border-slate-200');
+            this.classList.add('bg-primary', 'text-white', 'border-primary');
+            
+            const filter = this.dataset.filter;
+            document.querySelectorAll('.gallery-img').forEach(img => {
+                if (filter === 'all' || img.dataset.category === filter) {
+                    img.style.display = '';
+                } else {
+                    img.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+
+    // Navbar Scroll
+    window.onscroll = () => {
+        const nav = document.getElementById('navbar');
+        const el = nav.querySelector('.max-w-7xl');
+        if (window.scrollY > 100) {
+            el.classList.add('shadow-xl', 'bg-white/95');
+            el.classList.remove('bg-white/70');
+        } else {
+            el.classList.remove('shadow-xl', 'bg-white/95');
+            el.classList.add('bg-white/70');
+        }
+    };
+
+    // Mobile Menu
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.createElement('div');
+    mobileMenu.id = 'mobileMenu';
+    mobileMenu.className = 'hidden fixed inset-0 z-[60] bg-white flex flex-col items-center justify-center gap-8';
+    mobileMenu.innerHTML = `
+        <button id="closeMenu" class="absolute top-10 right-10 text-slate-600"><span class="material-symbols-outlined text-4xl">close</span></button>
+        <a href="#home" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'প্রচ্ছদ' : 'Home' %></a>
+        <a href="#etymology" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'ব্যুৎপত্তি' : 'Etymology' %></a>
+        <a href="#geography" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'ভূগোল' : 'Geography' %></a>
+        <a href="#culture" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'সংস্কৃতি' : 'Culture' %></a>
+        <a href="#history" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'সময়রেখা' : 'Timeline' %></a>
+        <a href="#people" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'ব্যক্তিত্ব' : 'Notable' %></a>
+        <a href="#articles" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'প্রবন্ধ' : 'Articles' %></a>
+        <a href="#gallery" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'গ্যালারি' : 'Gallery' %></a>
+        <a href="#members" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'সদস্য' : 'Members' %></a>
+    `;
+    document.body.appendChild(mobileMenu);
+    if (menuBtn) {
+        menuBtn.onclick = () => mobileMenu.classList.remove('hidden');
+        document.getElementById('closeMenu').onclick = () => mobileMenu.classList.add('hidden');
+        mobileMenu.querySelectorAll('a').forEach(link => link.onclick = () => mobileMenu.classList.add('hidden'));
+    }
+</script>
+</body>
+</html>

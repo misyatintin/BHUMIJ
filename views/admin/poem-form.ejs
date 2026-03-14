@@ -1,0 +1,34 @@
+<%- include('../partials/admin-header') %>
+<div class="form-card"><h3><%= poem ? 'Edit' : 'Add' %> Poem</h3>
+<form method="POST" action="/admin/poems/save">
+<% if(poem) { %><input type="hidden" name="id" value="<%= poem.id %>"><% } %>
+<div class="form-row">
+<div class="form-group"><label>Title (English)</label><input type="text" name="title_en" value="<%= poem ? poem.title_en : '' %>" required></div>
+<div class="form-group"><label>Title (Bengali)</label><input type="text" name="title_bn" value="<%= poem ? poem.title_bn : '' %>"></div>
+</div>
+<div class="form-group"><label>Content (English)</label>
+    <div id="editor-en" style="height: 250px; background: white;"><%- poem ? poem.content_en : '' %></div>
+    <input type="hidden" name="content_en" id="content_en">
+</div>
+<div class="form-group"><label>Content (Bengali)</label>
+    <div id="editor-bn" style="height: 250px; background: white;"><%- poem ? poem.content_bn : '' %></div>
+    <input type="hidden" name="content_bn" id="content_bn">
+</div>
+<div class="form-row">
+<div class="form-group"><label>Author (English)</label><input type="text" name="author_en" value="<%= poem ? poem.author_en : '' %>"></div>
+<div class="form-group"><label>Author (Bengali)</label><input type="text" name="author_bn" value="<%= poem ? poem.author_bn : '' %>"></div>
+</div>
+<div class="form-group"><label>Sort Order</label><input type="number" name="sort_order" value="<%= poem ? poem.sort_order : 0 %>" style="max-width:200px"></div>
+<button type="submit" class="btn btn-primary"><span class="material-symbols-outlined">save</span> Save</button> <a href="/admin/poems" class="btn">Cancel</a>
+</form></div>
+
+<script>
+    var quillEn = new Quill('#editor-en', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+    var quillBn = new Quill('#editor-bn', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+
+    document.querySelector('form').onsubmit = function() {
+        document.getElementById('content_en').value = quillEn.root.innerHTML;
+        document.getElementById('content_bn').value = quillBn.root.innerHTML;
+    };
+</script>
+<%- include('../partials/admin-footer') %>

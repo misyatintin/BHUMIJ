@@ -1,0 +1,41 @@
+<%- include('../partials/admin-header') %>
+<div class="form-card"><h3><%= article ? 'Edit' : 'Add' %> Article</h3>
+<form method="POST" action="/admin/articles/save" enctype="multipart/form-data">
+<% if(article) { %><input type="hidden" name="id" value="<%= article.id %>"><% } %>
+<div class="form-row">
+<div class="form-group"><label>Slug (URL)</label><input type="text" name="slug" value="<%= article ? article.slug : '' %>" required placeholder="e.g. jilpa-laya"></div>
+<div class="form-group"><label>Type</label><select name="article_type"><option value="history" <%= article && article.article_type==='history'?'selected':'' %>>History</option><option value="biography" <%= article && article.article_type==='biography'?'selected':'' %>>Biography</option><option value="editorial" <%= article && article.article_type==='editorial'?'selected':'' %>>Editorial</option><option value="script" <%= article && article.article_type==='script'?'selected':'' %>>Script/Language</option></select></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Title (English)</label><input type="text" name="title_en" value="<%= article ? article.title_en : '' %>" required></div>
+<div class="form-group"><label>Title (Bengali)</label><input type="text" name="title_bn" value="<%= article ? article.title_bn : '' %>"></div>
+</div>
+<div class="form-group"><label>Content (English)</label>
+    <div id="editor-en" style="height: 300px; background: white;"><%- article ? article.content_en : '' %></div>
+    <input type="hidden" name="content_en" id="content_en">
+</div>
+<div class="form-group"><label>Content (Bengali)</label>
+    <div id="editor-bn" style="height: 300px; background: white;"><%- article ? article.content_bn : '' %></div>
+    <input type="hidden" name="content_bn" id="content_bn">
+</div>
+<div class="form-row">
+<div class="form-group"><label>Author (English)</label><input type="text" name="author_en" value="<%= article ? article.author_en : '' %>"></div>
+<div class="form-group"><label>Author (Bengali)</label><input type="text" name="author_bn" value="<%= article ? article.author_bn : '' %>"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Image</label><input type="file" name="image" accept="image/*"><% if(article && article.image_path) { %><input type="hidden" name="existing_image" value="<%= article.image_path %>"><small>Current: <%= article.image_path %></small><% } %></div>
+<div class="form-group"><label>Sort Order</label><input type="number" name="sort_order" value="<%= article ? article.sort_order : 0 %>"></div>
+</div>
+<button type="submit" class="btn btn-primary"><span class="material-symbols-outlined">save</span> Save</button> <a href="/admin/articles" class="btn">Cancel</a>
+</form></div>
+
+<script>
+    var quillEn = new Quill('#editor-en', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+    var quillBn = new Quill('#editor-bn', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+
+    document.querySelector('form').onsubmit = function() {
+        document.getElementById('content_en').value = quillEn.root.innerHTML;
+        document.getElementById('content_bn').value = quillBn.root.innerHTML;
+    };
+</script>
+<%- include('../partials/admin-footer') %>

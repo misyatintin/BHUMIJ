@@ -1,0 +1,25 @@
+<%- include('../partials/admin-header') %>
+<% if (success) { %><div class="alert alert-success"><span class="material-symbols-outlined">check_circle</span> Saved successfully!</div><% } %>
+<div class="action-bar">
+    <h3 style="font-size:16px;color:#64748b;">Manage greeting messages from dignitaries</h3>
+    <a href="/admin/greetings/add" class="btn btn-primary"><span class="material-symbols-outlined">add</span> Add Greeting</a>
+</div>
+<table class="data-table">
+    <thead><tr><th>Image</th><th>Name (EN)</th><th>Name (BN)</th><th>Designation</th><th>Order</th><th>Actions</th></tr></thead>
+    <tbody>
+    <% greetings.forEach(g => { %>
+        <tr>
+            <td><% if(g.image_path) { %><img src="/uploads/<%= g.image_path %>" alt=""><% } else { %>—<% } %></td>
+            <td><strong><%= g.person_name_en %></strong></td>
+            <td><%= g.person_name_bn %></td>
+            <td><%= g.designation_en ? g.designation_en.substring(0,50) : '' %>...</td>
+            <td><%= g.sort_order %></td>
+            <td>
+                <a href="/admin/greetings/edit/<%= g.id %>" class="btn btn-sm btn-primary">Edit</a>
+                <a href="/admin/greetings/delete/<%= g.id %>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this greeting?')">Delete</a>
+            </td>
+        </tr>
+    <% }) %>
+    </tbody>
+</table>
+<%- include('../partials/admin-footer') %>

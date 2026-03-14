@@ -1,0 +1,42 @@
+<%- include('../partials/admin-header') %>
+<div class="form-card">
+    <h3><%= greeting ? 'Edit' : 'Add' %> Greeting Message</h3>
+    <form method="POST" action="/admin/greetings/save" enctype="multipart/form-data">
+        <% if(greeting) { %><input type="hidden" name="id" value="<%= greeting.id %>"><% } %>
+        <div class="form-row">
+            <div class="form-group"><label>Name (English)</label><input type="text" name="person_name_en" value="<%= greeting ? greeting.person_name_en : '' %>" required></div>
+            <div class="form-group"><label>Name (Bengali)</label><input type="text" name="person_name_bn" value="<%= greeting ? greeting.person_name_bn : '' %>"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Designation (English)</label><input type="text" name="designation_en" value="<%= greeting ? greeting.designation_en : '' %>"></div>
+            <div class="form-group"><label>Designation (Bengali)</label><input type="text" name="designation_bn" value="<%= greeting ? greeting.designation_bn : '' %>"></div>
+        </div>
+        <div class="form-group"><label>Message (English)</label>
+            <div id="editor-en" style="height: 200px; background: white;"><%- greeting ? greeting.message_en : '' %></div>
+            <input type="hidden" name="message_en" id="message_en">
+        </div>
+        <div class="form-group"><label>Message (Bengali)</label>
+            <div id="editor-bn" style="height: 200px; background: white;"><%- greeting ? greeting.message_bn : '' %></div>
+            <input type="hidden" name="message_bn" id="message_bn">
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Photo</label><input type="file" name="image" accept="image/*">
+                <% if(greeting && greeting.image_path) { %><input type="hidden" name="existing_image" value="<%= greeting.image_path %>"><small>Current: <%= greeting.image_path %></small><% } %>
+            </div>
+            <div class="form-group"><label>Sort Order</label><input type="number" name="sort_order" value="<%= greeting ? greeting.sort_order : 0 %>"></div>
+        </div>
+        <button type="submit" class="btn btn-primary"><span class="material-symbols-outlined">save</span> Save</button>
+        <a href="/admin/greetings" class="btn" style="margin-left:12px">Cancel</a>
+    </form>
+</div>
+
+<script>
+    var quillEn = new Quill('#editor-en', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+    var quillBn = new Quill('#editor-bn', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+
+    document.querySelector('form').onsubmit = function() {
+        document.getElementById('message_en').value = quillEn.root.innerHTML;
+        document.getElementById('message_bn').value = quillBn.root.innerHTML;
+    };
+</script>
+<%- include('../partials/admin-footer') %>

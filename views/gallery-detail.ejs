@@ -1,0 +1,83 @@
+<%- include('partials/header') %>
+
+<section class="py-32 px-6 bg-slate-50 min-h-screen">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row gap-16 items-start">
+            <!-- Image Section -->
+            <div class="w-full lg:w-2/3 group">
+                <div class="relative rounded-[40px] overflow-hidden shadow-2xl border-4 border-white bg-white">
+                    <img src="/uploads/<%= image.image_path %>" alt="<%= t(image, 'caption', lang) %>" class="w-full h-auto object-cover">
+                    <div class="absolute top-6 left-6">
+                        <span class="px-6 py-2 bg-primary/90 text-white text-xs font-bold uppercase tracking-widest rounded-full backdrop-blur-md">
+                            <%= lang === 'bn' ? (image.cat_name_bn || image.cat_name_en) : image.cat_name_en %>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="mt-12 flex items-center justify-between">
+                    <a href="/gallery" class="flex items-center gap-3 text-dark-slate font-bold uppercase tracking-widest text-xs hover:text-primary transition-all group">
+                        <span class="material-symbols-outlined group-hover:-translate-x-2 transition-transform">arrow_back</span>
+                        <%= lang === 'bn' ? 'গ্যালারিতে ফিরে যান' : 'Back to Gallery' %>
+                    </a>
+                    <div class="flex gap-4">
+                        <button class="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all">
+                            <span class="material-symbols-outlined">share</span>
+                        </button>
+                        <button class="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all">
+                            <span class="material-symbols-outlined">download</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Section -->
+            <div class="w-full lg:w-1/3 space-y-10">
+                <div class="space-y-4">
+                    <span class="text-primary font-bold text-sm uppercase tracking-[0.4em]"><%= lang === 'bn' ? 'দৃশ্যমান ঐতিহ্য' : 'Visual Heritage' %></span>
+                    <h1 class="cinzel-font text-3xl md:text-5xl font-black text-dark-slate leading-tight">
+                        <span class="text-gradient"><%= t(image, 'caption', lang) %></span>
+                    </h1>
+                </div>
+                
+                <div class="bg-white p-8 rounded-[32px] shadow-xl border border-blue-50 space-y-6">
+                    <div class="flex items-center gap-4 py-4 border-b border-slate-100">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined">category</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold"><%= lang === 'bn' ? 'বিভাগ' : 'Category' %></p>
+                            <p class="text-sm font-bold text-dark-slate"><%= lang === 'bn' ? (image.cat_name_bn || image.cat_name_en) : image.cat_name_en %></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 py-4 border-b border-slate-100">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined">calendar_today</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold"><%= lang === 'bn' ? 'সংগ্রহ' : 'Captured' %></p>
+                            <p class="text-sm font-bold text-dark-slate"><%= lang === 'bn' ? 'ঐতিহ্য সংরক্ষণ' : 'Heritage Archive' %></p>
+                        </div>
+                    </div>
+                    <div class="pt-4">
+                        <p class="text-slate-500 font-light leading-relaxed">
+                            <%= lang === 'bn' ? 'ভূমিজ সম্প্রদায়ের সাংস্কৃতিক ও ভৌগোলিক ইতিহাসের একটি দৃশ্যমান নথি। এই পত্রিকাটি আমাদের ঐতিহ্যের গভীরতা এবং আমাদের ঐতিহ্যের দীর্ঘস্থায়ী চেতনার সাক্ষ্য দেয়।' 
+                            : 'A visual document of the Bhumij community\'s cultural and geographical history. This frame captures the depth of our heritage and the enduring spirit of our traditions.' %>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Related or CTA -->
+                <div class="p-8 bg-primary rounded-[32px] shadow-2xl shadow-primary/30 text-white relative overflow-hidden group">
+                    <div class="absolute -right-8 -bottom-8 text-white/5 group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-9xl">auto_awesome</span>
+                    </div>
+                    <h3 class="cinzel-font text-xl font-bold mb-3"><%= lang === 'bn' ? 'সহযোগিতা করুন' : 'Contribute' %></h3>
+                    <p class="text-white/80 text-sm font-light leading-relaxed mb-6"><%= lang === 'bn' ? 'আপনার কাছে কি শেয়ার করার মতো কোনো ঐতিহ্য আছে? আমাদের ভিজ্যুয়াল আর্কাইভ প্রজেক্টে যোগ দিন।' : 'Have a piece of heritage to share? Join our visual archive project.' %></p>
+                    <a href="#" class="inline-flex px-8 py-3 bg-white text-primary rounded-xl text-xs font-bold uppercase tracking-widest hover:scale-105 transition-all"><%= lang === 'bn' ? 'ফটো জমা দিন' : 'Submit Photo' %></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include('partials/footer') %>

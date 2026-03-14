@@ -1,0 +1,137 @@
+<%- include('../partials/admin-header') %>
+<% if (success) { %><div class="alert alert-success"><span class="material-symbols-outlined">check_circle</span> Saved successfully!</div><% } %>
+
+<div class="form-card">
+    <h3 id="formTitle">Add Notable Person</h3>
+    <form action="/admin/notable/save" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="id" id="personId">
+        <input type="hidden" name="existing_image" id="existingImage">
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Name (EN)</label>
+                <input type="text" name="name_en" id="personNameEn" required>
+            </div>
+            <div class="form-group">
+                <label>Name (BN)</label>
+                <input type="text" name="name_bn" id="personNameBn" required>
+            </div>
+            <div class="form-group">
+                <label>Title/Role (EN)</label>
+                <input type="text" name="title_en" id="personTitleEn" required placeholder="e.g. Freedom Fighter">
+            </div>
+            <div class="form-group">
+                <label>Title/Role (BN)</label>
+                <input type="text" name="title_bn" id="personTitleBn" required>
+            </div>
+            <div class="form-group">
+                <label>Sort Order</label>
+                <input type="number" name="sort_order" id="personOrder" value="0">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Description (EN)</label>
+            <div id="editor-en" style="height: 150px; background: white;"><%- '' %></div>
+            <input type="hidden" name="description_en" id="description_en">
+        </div>
+        <div class="form-group">
+            <label>Description (BN)</label>
+            <div id="editor-bn" style="height: 150px; background: white;"><%- '' %></div>
+            <input type="hidden" name="description_bn" id="description_bn">
+        </div>
+
+        <div class="form-group">
+            <label>Profile Image</label>
+            <input type="file" name="image" accept="image/*">
+            <div id="imagePreview" style="margin-top:10px;"></div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="saveBtn">Save Person</button>
+            <button type="button" class="btn" onclick="resetForm()" style="display:none;" id="cancelBtn">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<div class="action-bar">
+    <h3 style="font-size:16px;color:#64748b;">Notable Personalities</h3>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Name (EN)</th>
+            <th>Title</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% people.forEach(p => { %>
+        <tr>
+            <td><% if(p.image_path) { %><img src="/uploads/<%= p.image_path %>" style="height:30px; border-radius:15px;"><% } else { %>—<% } %></td>
+            <td><strong><%= p.name_en %></strong></td>
+            <td><%= p.title_en %></td>
+            <td>
+                <button class="btn btn-sm btn-primary edit-btn" data-info='<%- JSON.stringify(p) %>'>Edit</button>
+                <a href="/admin/notable/delete/<%= p.id %>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this entry?')">Delete</a>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<script>
+var quillEn = new Quill('#editor-en', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+var quillBn = new Quill('#editor-bn', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+
+document.querySelector('form').onsubmit = function() {
+    document.getElementById('description_en').value = quillEn.root.innerHTML;
+    document.getElementById('description_bn').value = quillBn.root.innerHTML;
+};
+
+document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const p = JSON.parse(this.dataset.info);
+        document.getElementById('formTitle').innerText = 'Edit Notable Person';
+        document.getElementById('personId').value = p.id;
+        document.getElementById('personNameEn').value = p.name_en;
+        document.getElementById('personNameBn').value = p.name_bn;
+        document.getElementById('personTitleEn').value = p.title_en;
+        document.getElementById('personTitleBn').value = p.title_bn;
+        document.getElementById('personOrder').value = p.sort_order;
+        quillEn.root.innerHTML = p.description_en || '';
+        quillBn.root.innerHTML = p.description_bn || '';
+        document.getElementById('existingImage').value = p.image_path || '';
+        
+        if (p.image_path) {
+            document.getElementById('imagePreview').innerHTML = `<img src="/uploads/${p.image_path}" style="height:50px; border-radius:4px;">`;
+        } else {
+            document.getElementById('imagePreview').innerHTML = '';
+        }
+
+        document.getElementById('saveBtn').innerText = 'Update Person';
+        document.getElementById('cancelBtn').style.display = 'inline-block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+});
+
+function resetForm() {
+    document.getElementById('formTitle').innerText = 'Add Notable Person';
+    document.getElementById('personId').value = '';
+    document.getElementById('personOrder').value = '0';
+    document.getElementById('personNameEn').value = '';
+    document.getElementById('personNameBn').value = '';
+    document.getElementById('personTitleEn').value = '';
+    document.getElementById('personTitleBn').value = '';
+    quillEn.root.innerHTML = '';
+    quillBn.root.innerHTML = '';
+    document.getElementById('existingImage').value = '';
+    document.getElementById('imagePreview').innerHTML = '';
+    document.getElementById('saveBtn').innerText = 'Save Person';
+    document.getElementById('cancelBtn').style.display = 'none';
+}
+</script>
+
+<%- include('../partials/admin-footer') %>

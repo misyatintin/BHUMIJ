@@ -1,0 +1,18 @@
+<%- include('../partials/admin-header') %>
+<div class="form-card"><h3><%= meeting ? 'Edit' : 'Add' %> Meeting</h3>
+<form method="POST" action="/admin/meetings/save">
+<% if(meeting) { %><input type="hidden" name="id" value="<%= meeting.id %>"><% } %>
+<div class="form-row">
+<div class="form-group"><label>Meeting Number</label><input type="number" name="meeting_number" value="<%= meeting ? meeting.meeting_number : '' %>"></div>
+<div class="form-group"><label>Meeting Date</label><input type="text" name="meeting_date" value="<%= meeting ? meeting.meeting_date : '' %>" placeholder="e.g. 25.09.2014"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Title (English)</label><input type="text" name="title_en" value="<%= meeting ? meeting.title_en : '' %>" required></div>
+<div class="form-group"><label>Title (Bengali)</label><input type="text" name="title_bn" value="<%= meeting ? meeting.title_bn : '' %>"></div>
+</div>
+<div class="form-group"><label>Content (English)</label><textarea name="content_en" rows="8"><%= meeting ? meeting.content_en : '' %></textarea></div>
+<div class="form-group"><label>Content (Bengali)</label><textarea name="content_bn" rows="8"><%= meeting ? meeting.content_bn : '' %></textarea></div>
+<div class="form-group"><label>Sort Order</label><input type="number" name="sort_order" value="<%= meeting ? meeting.sort_order : 0 %>" style="max-width:200px"></div>
+<button type="submit" class="btn btn-primary"><span class="material-symbols-outlined">save</span> Save</button> <a href="/admin/meetings" class="btn">Cancel</a>
+</form></div>
+<%- include('../partials/admin-footer') %>

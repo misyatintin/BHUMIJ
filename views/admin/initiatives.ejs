@@ -1,0 +1,123 @@
+<%- include('../partials/admin-header') %>
+<% if (success) { %><div class="alert alert-success"><span class="material-symbols-outlined">check_circle</span> Saved successfully!</div><% } %>
+
+<div class="form-card">
+    <h3 id="formTitle">Add Initiative</h3>
+    <form action="/admin/initiatives/save" method="POST">
+        <input type="hidden" name="id" id="initId">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Icon</label>
+                <input type="text" name="icon" id="initIcon" required placeholder="e.g. school">
+            </div>
+            <div class="form-group">
+                <label>Sort Order</label>
+                <input type="number" name="sort_order" id="initOrder" value="0">
+            </div>
+            <div class="form-group">
+                <label>Title (EN)</label>
+                <input type="text" name="title_en" id="initTitleEn" required>
+            </div>
+            <div class="form-group">
+                <label>Title (BN)</label>
+                <input type="text" name="title_bn" id="initTitleBn" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Content (EN)</label>
+            <div id="editor-en" style="height: 150px; background: white;"><%- '' %></div>
+            <input type="hidden" name="content_en" id="content_en">
+        </div>
+        <div class="form-group">
+            <label>Content (BN)</label>
+            <div id="editor-bn" style="height: 150px; background: white;"><%- '' %></div>
+            <input type="hidden" name="content_bn" id="content_bn">
+        </div>
+        <div class="form-group">
+            <label>Features (EN) - Use | to separate</label>
+            <input type="text" name="features_en" id="initFeaturesEn" placeholder="Feature 1|Feature 2">
+        </div>
+        <div class="form-group">
+            <label>Features (BN) - Use | to separate</label>
+            <input type="text" name="features_bn" id="initFeaturesBn" placeholder="বৈশিষ্ট্য ১|বৈশিষ্ট্য ২">
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="saveBtn">Save Initiative</button>
+            <button type="button" class="btn" onclick="resetForm()" style="display:none;" id="cancelBtn">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<div class="action-bar">
+    <h3 style="font-size:16px;color:#64748b;">Current Initiatives</h3>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Icon</th>
+            <th>Title (EN)</th>
+            <th>Title (BN)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% initiatives.forEach(n => { %>
+        <tr>
+            <td><span class="material-symbols-outlined"><%= n.icon %></span></td>
+            <td><strong><%= n.title_en %></strong></td>
+            <td><%= n.title_bn %></td>
+            <td>
+                <button class="btn btn-sm btn-primary edit-btn" data-info='<%- JSON.stringify(n) %>'>Edit</button>
+                <a href="/admin/initiatives/delete/<%= n.id %>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this initiative?')">Delete</a>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<script>
+var quillEn = new Quill('#editor-en', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+var quillBn = new Quill('#editor-bn', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+
+document.querySelector('form').onsubmit = function() {
+    document.getElementById('content_en').value = quillEn.root.innerHTML;
+    document.getElementById('content_bn').value = quillBn.root.innerHTML;
+};
+
+document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const n = JSON.parse(this.dataset.info);
+        document.getElementById('formTitle').innerText = 'Edit Initiative';
+        document.getElementById('initId').value = n.id;
+        document.getElementById('initIcon').value = n.icon;
+        document.getElementById('initOrder').value = n.sort_order;
+        document.getElementById('initTitleEn').value = n.title_en;
+        document.getElementById('initTitleBn').value = n.title_bn;
+        quillEn.root.innerHTML = n.content_en || '';
+        quillBn.root.innerHTML = n.content_bn || '';
+        document.getElementById('initFeaturesEn').value = n.features_en || '';
+        document.getElementById('initFeaturesBn').value = n.features_bn || '';
+        document.getElementById('saveBtn').innerText = 'Update Initiative';
+        document.getElementById('cancelBtn').style.display = 'inline-block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+});
+
+function resetForm() {
+    document.getElementById('formTitle').innerText = 'Add Initiative';
+    document.getElementById('initId').value = '';
+    document.getElementById('initIcon').value = '';
+    document.getElementById('initOrder').value = '0';
+    document.getElementById('initTitleEn').value = '';
+    document.getElementById('initTitleBn').value = '';
+    quillEn.root.innerHTML = '';
+    quillBn.root.innerHTML = '';
+    document.getElementById('initFeaturesEn').value = '';
+    document.getElementById('initFeaturesBn').value = '';
+    document.getElementById('saveBtn').innerText = 'Save Initiative';
+    document.getElementById('cancelBtn').style.display = 'none';
+}
+</script>
+
+<%- include('../partials/admin-footer') %>

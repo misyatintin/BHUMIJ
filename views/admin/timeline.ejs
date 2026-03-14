@@ -1,0 +1,123 @@
+<%- include('../partials/admin-header') %>
+<% if (success) { %><div class="alert alert-success"><span class="material-symbols-outlined">check_circle</span> Saved successfully!</div><% } %>
+
+<div class="form-card">
+    <h3 id="formTitle">Add Timeline Event</h3>
+    <form action="/admin/timeline/save" method="POST">
+        <input type="hidden" name="id" id="eventId">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Period Code</label>
+                <input type="text" name="period_code" id="eventCode" required placeholder="e.g. ANC, COL, MOD">
+            </div>
+            <div class="form-group">
+                <label>Sort Order</label>
+                <input type="number" name="sort_order" id="eventOrder" value="0">
+            </div>
+            <div class="form-group">
+                <label>Period Label (EN)</label>
+                <input type="text" name="period_label_en" id="eventLabelEn" placeholder="e.g. Ancient">
+            </div>
+            <div class="form-group">
+                <label>Period Label (BN)</label>
+                <input type="text" name="period_label_bn" id="eventLabelBn" placeholder="e.g. প্রাচীন">
+            </div>
+            <div class="form-group">
+                <label>Event Title (EN)</label>
+                <input type="text" name="title_en" id="eventTitleEn" required>
+            </div>
+            <div class="form-group">
+                <label>Event Title (BN)</label>
+                <input type="text" name="title_bn" id="eventTitleBn" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Description (EN)</label>
+            <div id="editor-en" style="height: 150px; background: white;"><%- '' %></div>
+            <input type="hidden" name="description_en" id="description_en">
+        </div>
+        <div class="form-group">
+            <label>Description (BN)</label>
+            <div id="editor-bn" style="height: 150px; background: white;"><%- '' %></div>
+            <input type="hidden" name="description_bn" id="description_bn">
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="saveBtn">Save Event</button>
+            <button type="button" class="btn" onclick="resetForm()" style="display:none;" id="cancelBtn">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<div class="action-bar">
+    <h3 style="font-size:16px;color:#64748b;">Historical Timeline</h3>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Period</th>
+            <th>Title (EN)</th>
+            <th>Sort</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% events.forEach(e => { %>
+        <tr>
+            <td><strong><%= e.period_label_en %></strong> (<%= e.period_code %>)</td>
+            <td><%= e.title_en %></td>
+            <td><%= e.sort_order %></td>
+            <td>
+                <button class="btn btn-sm btn-primary edit-btn" data-info='<%- JSON.stringify(e) %>'>Edit</button>
+                <a href="/admin/timeline/delete/<%= e.id %>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this event?')">Delete</a>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<script>
+var quillEn = new Quill('#editor-en', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+var quillBn = new Quill('#editor-bn', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+
+document.querySelector('form').onsubmit = function() {
+    document.getElementById('description_en').value = quillEn.root.innerHTML;
+    document.getElementById('description_bn').value = quillBn.root.innerHTML;
+};
+
+document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const e = JSON.parse(this.dataset.info);
+        document.getElementById('formTitle').innerText = 'Edit Timeline Event';
+        document.getElementById('eventId').value = e.id;
+        document.getElementById('eventCode').value = e.period_code;
+        document.getElementById('eventOrder').value = e.sort_order;
+        document.getElementById('eventLabelEn').value = e.period_label_en || '';
+        document.getElementById('eventLabelBn').value = e.period_label_bn || '';
+        document.getElementById('eventTitleEn').value = e.title_en;
+        document.getElementById('eventTitleBn').value = e.title_bn;
+        quillEn.root.innerHTML = e.description_en || '';
+        quillBn.root.innerHTML = e.description_bn || '';
+        document.getElementById('saveBtn').innerText = 'Update Event';
+        document.getElementById('cancelBtn').style.display = 'inline-block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+});
+
+function resetForm() {
+    document.getElementById('formTitle').innerText = 'Add Timeline Event';
+    document.getElementById('eventId').value = '';
+    document.getElementById('eventCode').value = '';
+    document.getElementById('eventOrder').value = '0';
+    document.getElementById('eventLabelEn').value = '';
+    document.getElementById('eventLabelBn').value = '';
+    document.getElementById('eventTitleEn').value = '';
+    document.getElementById('eventTitleBn').value = '';
+    quillEn.root.innerHTML = '';
+    quillBn.root.innerHTML = '';
+    document.getElementById('saveBtn').innerText = 'Save Event';
+    document.getElementById('cancelBtn').style.display = 'none';
+}
+</script>
+
+<%- include('../partials/admin-footer') %>

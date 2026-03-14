@@ -1,0 +1,28 @@
+<%- include('../partials/admin-header') %>
+<div class="form-card"><h3><%= member ? 'Edit' : 'Add' %> Board Member</h3>
+<form method="POST" action="/admin/members/save" enctype="multipart/form-data">
+<% if(member) { %><input type="hidden" name="id" value="<%= member.id %>"><% } %>
+<div class="form-row">
+<div class="form-group"><label>Sl. No</label><input type="number" name="sl_no" value="<%= member ? member.sl_no : '' %>"></div>
+<div class="form-group"><label>Type</label><select name="member_type"><option value="elected" <%= member && member.member_type==='elected'?'selected':'' %>>Elected</option><option value="government" <%= member && member.member_type==='government'?'selected':'' %>>Government</option></select></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Name (English)</label><input type="text" name="name_en" value="<%= member ? member.name_en : '' %>" required></div>
+<div class="form-group"><label>Name (Bengali)</label><input type="text" name="name_bn" value="<%= member ? member.name_bn : '' %>"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Designation (English)</label><input type="text" name="designation_en" value="<%= member ? member.designation_en : '' %>"></div>
+<div class="form-group"><label>Designation (Bengali)</label><input type="text" name="designation_bn" value="<%= member ? member.designation_bn : '' %>"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Address (English)</label><textarea name="address_en" rows="3"><%= member ? member.address_en : '' %></textarea></div>
+<div class="form-group"><label>Address (Bengali)</label><textarea name="address_bn" rows="3"><%= member ? member.address_bn : '' %></textarea></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Phone</label><input type="text" name="phone" value="<%= member ? member.phone : '' %>"></div>
+<div class="form-group"><label>Sort Order</label><input type="number" name="sort_order" value="<%= member ? member.sort_order : 0 %>"></div>
+</div>
+<div class="form-group"><label>Photo</label><input type="file" name="image" accept="image/*"><% if(member && member.image_path) { %><input type="hidden" name="existing_image" value="<%= member.image_path %>"><% } %></div>
+<button type="submit" class="btn btn-primary"><span class="material-symbols-outlined">save</span> Save</button> <a href="/admin/members" class="btn">Cancel</a>
+</form></div>
+<%- include('../partials/admin-footer') %>

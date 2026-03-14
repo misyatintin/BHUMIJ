@@ -1,0 +1,14 @@
+            </div>
+        </main>
+    </div>
+    <script>
+        // Mobile sidebar toggle
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            if (window.innerWidth <= 768 && sidebar.classList.contains('open') && !sidebar.contains(e.target) && !e.target.closest('.menu-toggle')) {
+                sidebar.classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<%- include('../partials/admin-header') %>
+<% if (success) { %><div class="alert alert-success"><span class="material-symbols-outlined">check_circle</span> Saved successfully!</div><% } %>
+
+<div class="form-card">
+    <h3 id="formTitle">Add State/Region</h3>
+    <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Note: SVG Path coordinates can be copied from existing design or SVG editors.</p>
+    <form action="/admin/geography/save" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="id" id="stateId">
+        <input type="hidden" name="existing_image" id="existingImage">
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label>State/Region Code</label>
+                <input type="text" name="state_code" id="stateCode" required placeholder="e.g. jh, wb, or">
+            </div>
+            <div class="form-group">
+                <label>Sort Order</label>
+                <input type="number" name="sort_order" id="stateOrder" value="0">
+            </div>
+            <div class="form-group">
+                <label>Name (EN)</label>
+                <input type="text" name="name_en" id="stateNameEn" required>
+            </div>
+            <div class="form-group">
+                <label>Name (BN)</label>
+                <input type="text" name="name_bn" id="stateNameBn" required>
+            </div>
+            <div class="form-group">
+                <label>Subtitle (EN)</label>
+                <input type="text" name="subtitle_en" id="stateSubtitleEn">
+            </div>
+            <div class="form-group">
+                <label>Subtitle (BN)</label>
+                <input type="text" name="subtitle_bn" id="stateSubtitleBn">
+            </div>
+            <div class="form-group">
+                <label>Label X (SVG)</label>
+                <input type="number" name="text_x" id="stateX" placeholder="e.g. 465">
+            </div>
+            <div class="form-group">
+                <label>Label Y (SVG)</label>
+                <input type="number" name="text_y" id="stateY" placeholder="e.g. 325">
+            </div>
+            <div class="form-group">
+                <label>Population (EN)</label>
+                <input type="text" name="population" id="statePop" placeholder="e.g. 1.2M">
+            </div>
+            <div class="form-group">
+                <label>Population (BN)</label>
+                <input type="text" name="population_bn" id="statePopBn" placeholder="যেমন ১.২ মিলিয়ন">
+            </div>
+            <div class="form-group">
+                <label>Latitude</label>
+                <input type="number" step="any" name="latitude" id="stateLat" placeholder="e.g. 23.6102">
+            </div>
+            <div class="form-group">
+                <label>Longitude</label>
+                <input type="number" step="any" name="longitude" id="stateLng" placeholder="e.g. 85.2799">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>SVG Path (d value)</label>
+            <textarea name="svg_path" id="statePath" rows="2" placeholder="M 430 290 L ... Z"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Description (EN)</label>
+            <textarea name="description_en" id="stateDescEn" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Description (BN)</label>
+            <textarea name="description_bn" id="stateDescBn" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>State Image (Optional)</label>
+            <input type="file" name="image" accept="image/*">
+            <div id="imagePreview" style="margin-top:10px;"></div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="saveBtn">Save State</button>
+            <button type="button" class="btn" onclick="resetForm()" style="display:none;" id="cancelBtn">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<div class="action-bar">
+    <h3 style="font-size:16px;color:#64748b;">Existing States & Regions</h3>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Name (EN)</th>
+            <th>Label Pos</th>
+            <th>Sort Order</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% states.forEach(s => { %>
+        <tr>
+            <td><strong><%= s.state_code.toUpperCase() %></strong></td>
+            <td><%= s.name_en %></td>
+            <td>X: <%= s.text_x %>, Y: <%= s.text_y %></td>
+            <td><%= s.sort_order %></td>
+            <td>
+                <button class="btn btn-sm btn-primary edit-btn" data-info='<%- JSON.stringify(s) %>'>Edit</button>
+                <a href="/admin/geography/delete/<%= s.id %>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this state?')">Delete</a>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<script>
+document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const s = JSON.parse(this.dataset.info);
+        document.getElementById('formTitle').innerText = 'Edit State/Region';
+        document.getElementById('stateId').value = s.id;
+        document.getElementById('stateCode').value = s.state_code;
+        document.getElementById('stateOrder').value = s.sort_order;
+        document.getElementById('stateNameEn').value = s.name_en;
+        document.getElementById('stateNameBn').value = s.name_bn;
+        document.getElementById('stateSubtitleEn').value = s.subtitle_en;
+        document.getElementById('stateSubtitleBn').value = s.subtitle_bn;
+        document.getElementById('stateX').value = s.text_x;
+        document.getElementById('stateY').value = s.text_y;
+        document.getElementById('statePop').value = s.population || '';
+        document.getElementById('statePopBn').value = s.population_bn || '';
+        document.getElementById('stateLat').value = s.latitude || '';
+        document.getElementById('stateLng').value = s.longitude || '';
+        document.getElementById('statePath').value = s.svg_path;
+        document.getElementById('stateDescEn').value = s.description_en;
+        document.getElementById('stateDescBn').value = s.description_bn;
+        document.getElementById('existingImage').value = s.image_path;
+        
+        if (s.image_path) {
+            document.getElementById('imagePreview').innerHTML = `<img src="/uploads/${s.image_path}" style="height:50px; border-radius:4px;">`;
+        } else {
+            document.getElementById('imagePreview').innerHTML = '';
+        }
+
+        document.getElementById('saveBtn').innerText = 'Update State';
+        document.getElementById('cancelBtn').style.display = 'inline-block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+});
+
+function resetForm() {
+    document.getElementById('formTitle').innerText = 'Add State/Region';
+    document.getElementById('stateId').value = '';
+    document.getElementById('stateCode').value = '';
+    document.getElementById('stateOrder').value = '0';
+    document.getElementById('stateNameEn').value = '';
+    document.getElementById('stateNameBn').value = '';
+    document.getElementById('stateSubtitleEn').value = '';
+    document.getElementById('stateSubtitleBn').value = '';
+    document.getElementById('stateX').value = '';
+    document.getElementById('stateY').value = '';
+    document.getElementById('statePop').value = '';
+    document.getElementById('statePopBn').value = '';
+    document.getElementById('stateLat').value = '';
+    document.getElementById('stateLng').value = '';
+    document.getElementById('statePath').value = '';
+    document.getElementById('stateDescEn').value = '';
+    document.getElementById('stateDescBn').value = '';
+    document.getElementById('existingImage').value = '';
+    document.getElementById('imagePreview').innerHTML = '';
+    document.getElementById('saveBtn').innerText = 'Save State';
+    document.getElementById('cancelBtn').style.display = 'none';
+}
+</script>
+
+<%- include('../partials/admin-footer') %>

@@ -1,0 +1,115 @@
+<%- include('../partials/admin-header') %>
+<% if (success) { %><div class="alert alert-success"><span class="material-symbols-outlined">check_circle</span> Saved successfully!</div><% } %>
+
+<div class="form-card">
+    <h3 id="formTitle">Add Board Information Section</h3>
+    <form action="/admin/board-info/save" method="POST">
+        <input type="hidden" name="id" id="secId">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Section Key</label>
+                <input type="text" name="section_key" id="secKey" required placeholder="e.g. formation, functions">
+            </div>
+            <div class="form-group">
+                <label>Sort Order</label>
+                <input type="number" name="sort_order" id="secOrder" value="0">
+            </div>
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Title (EN)</label>
+                <input type="text" name="title_en" id="secTitleEn" required>
+            </div>
+            <div class="form-group">
+                <label>Title (BN)</label>
+                <input type="text" name="title_bn" id="secTitleBn" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Content (EN)</label>
+            <div id="editor-en" style="height: 200px; background: white;"><%- '' %></div>
+            <input type="hidden" name="content_en" id="content_en">
+        </div>
+        <div class="form-group">
+            <label>Content (BN)</label>
+            <div id="editor-bn" style="height: 200px; background: white;"><%- '' %></div>
+            <input type="hidden" name="content_bn" id="content_bn">
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="saveBtn">Save Section</button>
+            <button type="button" class="btn" onclick="resetForm()" style="display:none;" id="cancelBtn">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<div class="action-bar">
+    <h3 style="font-size:16px;color:#64748b;">Current Board Sections</h3>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Title (EN)</th>
+            <th>Title (BN)</th>
+            <th>Sort</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% sections.forEach(s => { %>
+        <tr>
+            <td><code><%= s.section_key %></code></td>
+            <td><strong><%= s.title_en %></strong></td>
+            <td><%= s.title_bn %></td>
+            <td><%= s.sort_order %></td>
+            <td>
+                <button class="btn btn-sm btn-primary edit-btn" data-info='<%- JSON.stringify(s) %>'>Edit</button>
+                <a href="/admin/board-info/delete/<%= s.id %>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this section?')">Delete</a>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<script>
+var quillEn = new Quill('#editor-en', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+var quillBn = new Quill('#editor-bn', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+
+document.querySelector('form').onsubmit = function() {
+    document.getElementById('content_en').value = quillEn.root.innerHTML;
+    document.getElementById('content_bn').value = quillBn.root.innerHTML;
+};
+
+document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const s = JSON.parse(this.dataset.info);
+        document.getElementById('formTitle').innerText = 'Edit Board Section';
+        document.getElementById('secId').value = s.id;
+        document.getElementById('secKey').value = s.section_key;
+        document.getElementById('secTitleEn').value = s.title_en;
+        document.getElementById('secTitleBn').value = s.title_bn;
+        document.getElementById('secOrder').value = s.sort_order;
+        quillEn.root.innerHTML = s.content_en || '';
+        quillBn.root.innerHTML = s.content_bn || '';
+        document.getElementById('saveBtn').innerText = 'Update Section';
+        document.getElementById('cancelBtn').style.display = 'inline-block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+});
+
+function resetForm() {
+    document.getElementById('formTitle').innerText = 'Add Board Section';
+    document.getElementById('secId').value = '';
+    document.getElementById('secKey').value = '';
+    document.getElementById('secTitleEn').value = '';
+    document.getElementById('secTitleBn').value = '';
+    document.getElementById('secOrder').value = '0';
+    quillEn.root.innerHTML = '';
+    quillBn.root.innerHTML = '';
+    document.getElementById('saveBtn').innerText = 'Save Section';
+    document.getElementById('cancelBtn').style.display = 'none';
+}
+</script>
+
+<%- include('../partials/admin-footer') %>

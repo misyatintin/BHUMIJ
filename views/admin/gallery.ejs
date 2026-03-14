@@ -1,0 +1,52 @@
+<%- include('../partials/admin-header') %>
+<% if (success) { %><div class="alert alert-success"><span class="material-symbols-outlined">check_circle</span> Saved!</div><% } %>
+
+<!-- Add Category -->
+<div class="form-card">
+    <h3>Add Gallery Category</h3>
+    <form method="POST" action="/admin/gallery/category/save">
+        <div class="form-row">
+            <div class="form-group"><label>Name (English)</label><input type="text" name="name_en" required></div>
+            <div class="form-group"><label>Name (Bengali)</label><input type="text" name="name_bn"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Description (English)</label><input type="text" name="description_en"></div>
+            <div class="form-group"><label>Description (Bengali)</label><input type="text" name="description_bn"></div>
+        </div>
+        <div class="form-group"><label>Sort Order</label><input type="number" name="sort_order" value="0" style="max-width:200px"></div>
+        <button type="submit" class="btn btn-primary"><span class="material-symbols-outlined">add</span> Add Category</button>
+    </form>
+</div>
+
+<!-- Upload Image -->
+<div class="form-card">
+    <h3>Upload Image</h3>
+    <form method="POST" action="/admin/gallery/image/save" enctype="multipart/form-data">
+        <div class="form-row">
+            <div class="form-group"><label>Category</label><select name="category_id" required>
+                <% categories.forEach(c => { %><option value="<%= c.id %>"><%= c.name_en %></option><% }) %>
+            </select></div>
+            <div class="form-group"><label>Image</label><input type="file" name="image" accept="image/*" required></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Caption (English)</label><input type="text" name="caption_en"></div>
+            <div class="form-group"><label>Caption (Bengali)</label><input type="text" name="caption_bn"></div>
+        </div>
+        <div class="form-group"><label>Sort Order</label><input type="number" name="sort_order" value="0" style="max-width:200px"></div>
+        <button type="submit" class="btn btn-primary"><span class="material-symbols-outlined">upload</span> Upload</button>
+    </form>
+</div>
+
+<!-- Gallery List -->
+<div class="form-card">
+    <h3>Gallery Images (<%= images.length %>)</h3>
+    <div class="gallery-grid">
+        <% images.forEach(img => { %>
+        <div class="gallery-item">
+            <img src="/uploads/<%= img.image_path %>" alt="<%= img.caption_en %>">
+            <div class="overlay"><a href="/admin/gallery/image/delete/<%= img.id %>" class="btn btn-sm btn-danger" onclick="return confirm('Delete?')" style="background:#ef4444;color:#fff">Delete</a></div>
+        </div>
+        <% }) %>
+    </div>
+</div>
+<%- include('../partials/admin-footer') %>

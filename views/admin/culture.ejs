@@ -1,0 +1,128 @@
+<%- include('../partials/admin-header') %>
+<% if (success) { %><div class="alert alert-success"><span class="material-symbols-outlined">check_circle</span> Saved successfully!</div><% } %>
+
+<div class="form-card">
+    <h3 id="formTitle">Add Culture Card</h3>
+    <form action="/admin/culture/save" method="POST">
+        <input type="hidden" name="id" id="cardId">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Icon</label>
+                <input type="text" name="icon" id="cardIcon" required placeholder="e.g. sports_martial_arts">
+            </div>
+            <div class="form-group">
+                <label>Theme Color Class</label>
+                <select name="color" id="cardColor">
+                    <option value="primary">Dark Slate (Primary)</option>
+                    <option value="maya-blue">Maya Blue</option>
+                    <option value="sky-blue">Sky Blue</option>
+                    <option value="coral">Coral</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Sort Order</label>
+                <input type="number" name="sort_order" id="cardOrder" value="0">
+            </div>
+            <div class="form-group">
+                <label>Title (EN)</label>
+                <input type="text" name="title_en" id="cardTitleEn" required>
+            </div>
+            <div class="form-group">
+                <label>Title (BN)</label>
+                <input type="text" name="title_bn" id="cardTitleBn" required>
+            </div>
+            <div class="form-group">
+                <label>Image URL (Optional)</label>
+                <input type="text" name="image_url" id="cardImage">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Content (EN)</label>
+            <div id="editor-en" style="height: 150px; background: white;"><%- '' %></div>
+            <input type="hidden" name="content_en" id="content_en">
+        </div>
+        <div class="form-group">
+            <label>Content (BN)</label>
+            <div id="editor-bn" style="height: 150px; background: white;"><%- '' %></div>
+            <input type="hidden" name="content_bn" id="content_bn">
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="saveBtn">Save Card</button>
+            <button type="button" class="btn" onclick="resetForm()" style="display:none;" id="cancelBtn">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<div class="action-bar">
+    <h3 style="font-size:16px;color:#64748b;">Culture & Heritage Cards</h3>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Icon</th>
+            <th>Title (EN)</th>
+            <th>Color</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% cards.forEach(c => { %>
+        <tr>
+            <td><span class="material-symbols-outlined"><%= c.icon %></span></td>
+            <td><strong><%= c.title_en %></strong></td>
+            <td><code><%= c.color %></code></td>
+            <td>
+                <button class="btn btn-sm btn-primary edit-btn" data-info='<%- JSON.stringify(c) %>'>Edit</button>
+                <a href="/admin/culture/delete/<%= c.id %>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this card?')">Delete</a>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<script>
+var quillEn = new Quill('#editor-en', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+var quillBn = new Quill('#editor-bn', { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']] } });
+
+document.querySelector('form').onsubmit = function() {
+    document.getElementById('content_en').value = quillEn.root.innerHTML;
+    document.getElementById('content_bn').value = quillBn.root.innerHTML;
+};
+
+document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const c = JSON.parse(this.dataset.info);
+        document.getElementById('formTitle').innerText = 'Edit Culture Card';
+        document.getElementById('cardId').value = c.id;
+        document.getElementById('cardIcon').value = c.icon;
+        document.getElementById('cardColor').value = c.color;
+        document.getElementById('cardOrder').value = c.sort_order;
+        document.getElementById('cardTitleEn').value = c.title_en;
+        document.getElementById('cardTitleBn').value = c.title_bn;
+        quillEn.root.innerHTML = c.content_en || '';
+        quillBn.root.innerHTML = c.content_bn || '';
+        document.getElementById('cardImage').value = c.image_url || '';
+        document.getElementById('saveBtn').innerText = 'Update Card';
+        document.getElementById('cancelBtn').style.display = 'inline-block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+});
+
+function resetForm() {
+    document.getElementById('formTitle').innerText = 'Add Culture Card';
+    document.getElementById('cardId').value = '';
+    document.getElementById('cardIcon').value = '';
+    document.getElementById('cardColor').value = 'primary';
+    document.getElementById('cardOrder').value = '0';
+    document.getElementById('cardTitleEn').value = '';
+    document.getElementById('cardTitleBn').value = '';
+    quillEn.root.innerHTML = '';
+    quillBn.root.innerHTML = '';
+    document.getElementById('cardImage').value = '';
+    document.getElementById('saveBtn').innerText = 'Save Card';
+    document.getElementById('cancelBtn').style.display = 'none';
+}
+</script>
+
+<%- include('../partials/admin-footer') %>

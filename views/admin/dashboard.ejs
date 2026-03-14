@@ -1,0 +1,98 @@
+<%- include('../partials/admin-header') %>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="icon blue"><span class="material-symbols-outlined">mail</span></div>
+        <div class="number"><%= stats.greetings %></div>
+        <div class="label">Greetings</div>
+    </div>
+    <div class="stat-card">
+        <div class="icon green"><span class="material-symbols-outlined">group</span></div>
+        <div class="number"><%= stats.members %></div>
+        <div class="label">Board Members</div>
+    </div>
+    <div class="stat-card">
+        <div class="icon purple"><span class="material-symbols-outlined">article</span></div>
+        <div class="number"><%= stats.articles %></div>
+        <div class="label">Articles</div>
+    </div>
+    <div class="stat-card">
+        <div class="icon orange"><span class="material-symbols-outlined">photo_library</span></div>
+        <div class="number"><%= stats.images %></div>
+        <div class="label">Gallery Images</div>
+    </div>
+    <div class="stat-card">
+        <div class="icon pink"><span class="material-symbols-outlined">edit_note</span></div>
+        <div class="number"><%= stats.poems %></div>
+        <div class="label">Poems</div>
+    </div>
+    <div class="stat-card">
+        <div class="icon teal"><span class="material-symbols-outlined">event</span></div>
+        <div class="number"><%= stats.meetings %></div>
+        <div class="label">Meetings</div>
+    </div>
+    <div class="stat-card">
+        <div class="icon orange"><span class="material-symbols-outlined">history</span></div>
+        <div class="number"><%= stats.etymology %></div>
+        <div class="label">Etymology</div>
+    </div>
+    <div class="stat-card">
+        <div class="icon blue"><span class="material-symbols-outlined">map</span></div>
+        <div class="number"><%= stats.geography %></div>
+        <div class="label">Geography</div>
+    </div>
+    <div class="stat-card">
+        <div class="icon green"><span class="material-symbols-outlined">volunteer_activism</span></div>
+        <div class="number"><%= stats.initiatives %></div>
+        <div class="label">Initiatives</div>
+    </div>
+    <div class="stat-card">
+        <div class="icon purple"><span class="material-symbols-outlined">temple_hindu</span></div>
+        <div class="number"><%= stats.culture %></div>
+        <div class="label">Culture</div>
+    </div>
+    <div class="stat-card">
+        <div class="icon orange"><span class="material-symbols-outlined">timeline</span></div>
+        <div class="number"><%= stats.timeline %></div>
+        <div class="label">Timeline</div>
+    </div>
+    <div class="stat-card">
+        <div class="icon pink"><span class="material-symbols-outlined">person_pin</span></div>
+        <div class="number"><%= stats.notable %></div>
+        <div class="label">Notable People</div>
+    </div>
+    <div class="stat-card">
+        <div class="icon blue"><span class="material-symbols-outlined">trophy</span></div>
+        <div class="number"><%= stats.achievements %></div>
+        <div class="label">Achievements</div>
+    </div>
+    <div class="stat-card">
+        <div class="icon purple"><span class="material-symbols-outlined">info</span></div>
+        <div class="number"><%= stats.boardInfo %></div>
+        <div class="label">Board Sections</div>
+    </div>
+    <div class="stat-card">
+        <div class="icon green"><span class="material-symbols-outlined">map</span></div>
+        <div class="number"><%= stats.tours %></div>
+        <div class="label">Tour Activities</div>
+    </div>
+</div>
+
+<div class="form-card">
+    <h3>Quick Links</h3>
+    <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+        <a href="/admin/greetings/add" class="btn btn-primary"><span class="material-symbols-outlined">add</span> Add Greeting</a>
+        <a href="/admin/articles/add" class="btn btn-primary"><span class="material-symbols-outlined">add</span> Add Article</a>
+        <a href="/admin/members/add" class="btn btn-primary"><span class="material-symbols-outlined">add</span> Add Member</a>
+        <a href="/admin/poems/add" class="btn btn-primary"><span class="material-symbols-outlined">add</span> Add Poem</a>
+        <a href="/admin/etymology" class="btn btn-primary"><span class="material-symbols-outlined">history</span> Manage Etymology</a>
+        <a href="/admin/geography" class="btn btn-primary"><span class="material-symbols-outlined">map</span> Manage Geography</a>
+        <a href="/admin/initiatives" class="btn btn-primary"><span class="material-symbols-outlined">volunteer_activism</span> Manage Initiatives</a>
+        <a href="/admin/culture" class="btn btn-primary"><span class="material-symbols-outlined">temple_hindu</span> Manage Culture</a>
+        <a href="/admin/timeline" class="btn btn-primary"><span class="material-symbols-outlined">timeline</span> Manage Timeline</a>
+        <a href="/admin/notable" class="btn btn-primary"><span class="material-symbols-outlined">person_pin</span> Manage Notable</a>
+        <a href="/" target="_blank" class="btn btn-success"><span class="material-symbols-outlined">language</span> View Website</a>
+    </div>
+</div>
+
+<%- include('../partials/admin-footer') %>
