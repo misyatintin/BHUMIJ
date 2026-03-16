@@ -7,6 +7,13 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Debug env
+console.log('PORT:', process.env.PORT);
+console.log('DB_HOST:', process.env.DB_HOST);
+console.log('DB_NAME:', process.env.DB_NAME);
+console.log('DB_USER:', process.env.DB_USER);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+
 // View engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -17,22 +24,38 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Request logger
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+    next();
+});
+
 // Session
+app.set('trust proxy', 1);
+
 app.use(session({
     secret: process.env.SESSION_SECRET || 'fallback-secret-key',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 }
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        secure: false
+    }
 }));
 
 // Global middleware for language
 app.use((req, res, next) => {
-    if (req.query.lang) {
-        req.session.lang = req.query.lang;
+    try {
+        if (req.query.lang) {
+            req.session.lang = req.query.lang;
+        }
+        res.locals.lang = req.session.lang || 'en';
+        res.locals.user = req.session.user || null;
+        next();
+    } catch (err) {
+        next(err);
     }
-    res.locals.lang = req.session.lang || 'en';
-    res.locals.user = req.session.user || null;
-    next();
 });
 
 // Multer config for file uploads
@@ -43,7 +66,12 @@ const storage = multer.diskStorage({
         cb(null, uniqueSuffix + path.extname(file.originalname));
     }
 });
-const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } });
+
+const upload = multer({
+    storage,
+    limits: { fileSize: 10 * 1024 * 1024 }
+});
+
 app.locals.upload = upload;
 
 // Routes
@@ -60,8 +88,17 @@ app.use((req, res) => {
     res.status(404).render('404', { title: 'Page Not Found' });
 });
 
-app.listen(PORT, () => {
-    console.log(`\n🌿 Bhumij CMS Server running at http://localhost:${PORT}`);
-    console.log(`📋 Admin Panel: http://localhost:${PORT}/admin`);
-    console.log(`🌐 Public Site: http://localhost:${PORT}\n`);
+// Global error handler
+app.use((err, req, res, next) => {
+    console.error('===== SERVER ERROR =====');
+    console.error('URL:', req.method, req.originalUrl);
+    console.error(err.stack || err);
+
+    res.status(500).send('Internal Server Error');
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`\n🌿 Bhumij CMS Server running at http://0.0.0.0:${PORT}`);
+    console.log(`📋 Admin Panel: /admin`);
+    console.log(`🌐 Public Site: /\n`);
 });
