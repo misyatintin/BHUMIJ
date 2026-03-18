@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="<%= lang %>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="icon" type="image/png" href="/uploads/<%= settingsMap.site_favicon?.en || 'favicon.png' %>">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1d4ed8', // Royal Blue
+                        secondary: '#4338ca', // Indigo
+                        accent: '#06b6d4', // Cyan
+                        'deep-navy': '#0f172a',
+                        'vibrant-blue': '#2563eb',
+                        'soft-indigo': '#eef2ff',
+                        'dark-slate': '#1e293b',
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        outfit: ['Outfit', 'Noto Sans Bengali', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'slow-glow': 'glow 3s infinite alternate',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        glow: {
+                            '0%': { textShadow: '0 0 5px rgba(37, 99, 235, 0.2)' },
+                            '100%': { textShadow: '0 0 20px rgba(37, 99, 235, 0.6)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Outfit', 'Noto Sans Bengali', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
+        .cinzel-font { font-family: 'Cinzel', serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .text-gradient { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #06b6d4 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .bg-gradient-premium { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .carousel-item { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .carousel-item.active { opacity: 1; }
+        .scroll-indicator-container { height: 6px; background: rgba(0,0,0,0.05); border-radius: 10px; overflow: hidden; }
+        .scroll-indicator-bar { height: 100%; background: linear-gradient(to right, #1d4ed8, #06b6d4); width: 0%; transition: width 0.3s ease; }
+    </style>
+</head>
+<body class="custom-scrollbar selection:bg-primary/20">
+
+<!-- Navigation -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-4 px-6 md:px-12">
+    <div class="max-w-7xl mx-auto flex justify-between items-center bg-white/70 backdrop-blur-xl border border-blue-100/30 rounded-full px-6 py-2 shadow-lg shadow-blue-500/5 transition-all">
+        <a href="/" class="flex items-center gap-2 group">
+            <% if (settingsMap.site_logo?.en) { %>
+                <img src="/uploads/<%= settingsMap.site_logo.en %>" class="w-10 h-10 object-contain group-hover:scale-110 transition-transform" alt="Logo">
+            <% } else { %>
+                <span class="material-symbols-outlined text-primary text-2xl group-hover:rotate-12 transition-transform">temple_hindu</span>
+            <% } %>
+            <span class="cinzel-font text-xl font-bold tracking-tight text-dark-slate"><%= lang === 'bn' ? 'ভূমিজ' : 'BHUMIJ' %></span>
+        </a>
+        
+        <div class="hidden lg:flex items-center gap-1" id="navLinks">
+            <a href="/#home" class="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'প্রচ্ছদ' : 'Home' %></a>
+            <a href="/#etymology" class="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'ব্যুৎপত্তি' : 'Etymology' %></a>
+            <a href="/#geography" class="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'ভূগোল' : 'Geography' %></a>
+            <a href="/#culture" class="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'সংস্কৃতি' : 'Culture' %></a>
+            <a href="/#history" class="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'সময়রেখা' : 'Timeline' %></a>
+            <a href="/#people" class="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'ব্যক্তিত্ব' : 'Notable' %></a>
+            <a href="/#articles" class="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'প্রবন্ধ' : 'Articles' %></a>
+            <a href="/gallery" class="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'গ্যালারি' : 'Gallery' %></a>
+            <a href="/#members" class="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'সদস্য' : 'Members' %></a>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div class="flex items-center bg-slate-100 rounded-full p-1">
+                <a href="?lang=en" class="px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all <%= lang === 'en' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-slate-500 hover:text-primary' %>">EN</a>
+                <a href="?lang=bn" class="px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all <%= lang === 'bn' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-slate-500 hover:text-primary' %>">বাং</a>
+            </div>
+            <button id="menuBtn" class="lg:hidden flex p-2 text-slate-600">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Mobile Menu (Now in Header) -->
+<div id="mobileMenu" class="hidden fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center gap-6 p-12">
+    <button id="closeMenu" class="absolute top-10 right-10 text-slate-600 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-4xl">close</span>
+    </button>
+    <a href="/#home" class="cinzel-font text-2xl font-bold hover:text-primary transition-all"><%= lang === 'bn' ? 'প্রচ্ছদ' : 'Home' %></a>
+    <a href="/#etymology" class="cinzel-font text-2xl font-bold hover:text-primary transition-all"><%= lang === 'bn' ? 'ব্যুৎপত্তি' : 'Etymology' %></a>
+    <a href="/#geography" class="cinzel-font text-2xl font-bold hover:text-primary transition-all"><%= lang === 'bn' ? 'ভূগোল' : 'Geography' %></a>
+    <a href="/#culture" class="cinzel-font text-2xl font-bold hover:text-primary transition-all"><%= lang === 'bn' ? 'সংস্কৃতি' : 'Culture' %></a>
+    <a href="/#history" class="cinzel-font text-2xl font-bold hover:text-primary transition-all"><%= lang === 'bn' ? 'সময়রেখা' : 'Timeline' %></a>
+    <a href="/#people" class="cinzel-font text-2xl font-bold hover:text-primary transition-all"><%= lang === 'bn' ? 'ব্যক্তিত্ব' : 'Notable' %></a>
+    <a href="/#articles" class="cinzel-font text-2xl font-bold hover:text-primary transition-all"><%= lang === 'bn' ? 'প্রবন্ধ' : 'Articles' %></a>
+    <a href="/gallery" class="cinzel-font text-2xl font-bold hover:text-primary transition-all"><%= lang === 'bn' ? 'গ্যালারি' : 'Gallery' %></a>
+    <a href="/#members" class="cinzel-font text-2xl font-bold hover:text-primary transition-all"><%= lang === 'bn' ? 'সদস্য' : 'Members' %></a>
+</div>
+
+<script>
+    // Header Scroll Logic
+    window.addEventListener('scroll', () => {
+        const nav = document.getElementById('navbar');
+        const container = nav.querySelector('.max-w-7xl');
+        if (window.scrollY > 50) {
+            container.classList.add('shadow-xl', 'bg-white/95', 'py-1');
+            container.classList.remove('bg-white/70', 'py-2');
+        } else {
+            container.classList.remove('shadow-xl', 'bg-white/95', 'py-1');
+            container.classList.add('bg-white/70', 'py-2');
+        }
+    });
+
+    // Mobile Menu Logic
+    const menuBtn = document.getElementById('menuBtn');
+    const closeBtn = document.getElementById('closeMenu');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    if (menuBtn && mobileMenu) {
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+        closeBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+            document.body.style.overflow = '';
+        });
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                document.body.style.overflow = '';
+            });
+        });
+    }
+</script>
+

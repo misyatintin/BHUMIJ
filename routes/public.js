@@ -14,9 +14,7 @@ function t(row, field, lang) {
 router.get('/', async (req, res) => {
     try {
         const lang = res.locals.lang;
-        const [settings] = await pool.query('SELECT * FROM site_settings');
-        const settingsMap = {};
-        settings.forEach(s => { settingsMap[s.setting_key] = { en: s.setting_value_en, bn: s.setting_value_bn }; });
+
 
         const [greetings] = await pool.query('SELECT * FROM greeting_messages WHERE is_active = 1 ORDER BY sort_order');
         const [achievements] = await pool.query('SELECT * FROM achievements WHERE is_active = 1 ORDER BY sort_order');
@@ -37,9 +35,11 @@ router.get('/', async (req, res) => {
         const [timelineEvents] = await pool.query('SELECT * FROM timeline_events WHERE is_active = 1 ORDER BY sort_order');
         const [notablePeople] = await pool.query('SELECT * FROM notable_people WHERE is_active = 1 ORDER BY sort_order');
 
+        const settingsMap = res.locals.settingsMap;
+
         res.render('index', {
             title: lang === 'bn' ? settingsMap.site_title?.bn : settingsMap.site_title?.en,
-            lang, t, settingsMap, greetings, achievements, meetings, categories, galleryImages, poems, articles, members, heroSlides, tourActivities, boardInfo,
+            t, greetings, achievements, meetings, categories, galleryImages, poems, articles, members, heroSlides, tourActivities, boardInfo,
             etymologyCards, geoStates, initiatives, cultureCards, timelineEvents, notablePeople
         });
     } catch (err) {
@@ -54,10 +54,8 @@ router.get('/article/:slug', async (req, res) => {
         const lang = res.locals.lang;
         const [rows] = await pool.query('SELECT * FROM articles WHERE slug = ?', [req.params.slug]);
         if (!rows.length) return res.status(404).render('404', { title: 'Not Found' });
-        const [settings] = await pool.query('SELECT * FROM site_settings');
-        const settingsMap = {};
-        settings.forEach(s => { settingsMap[s.setting_key] = { en: s.setting_value_en, bn: s.setting_value_bn }; });
-        res.render('article', { article: rows[0], lang, t, settingsMap, title: t(rows[0], 'title', lang) });
+
+        res.render('article', { article: rows[0], t, title: t(rows[0], 'title', lang) });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
@@ -71,10 +69,8 @@ router.get('/greeting/:id', async (req, res) => {
         const [rows] = await pool.query('SELECT * FROM greeting_messages WHERE id = ?', [req.params.id]);
         if (!rows.length) return res.status(404).render('404', { title: 'Not Found', lang });
         const [allGreetings] = await pool.query('SELECT * FROM greeting_messages WHERE is_active = 1 ORDER BY sort_order');
-        const [settings] = await pool.query('SELECT * FROM site_settings');
-        const settingsMap = {};
-        settings.forEach(s => { settingsMap[s.setting_key] = { en: s.setting_value_en, bn: s.setting_value_bn }; });
-        res.render('greeting', { greeting: rows[0], allGreetings, lang, t, settingsMap, title: t(rows[0], 'person_name', lang) });
+
+        res.render('greeting', { greeting: rows[0], allGreetings, t, title: t(rows[0], 'person_name', lang) });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
@@ -87,10 +83,8 @@ router.get('/gallery', async (req, res) => {
         const lang = res.locals.lang;
         const [categories] = await pool.query('SELECT * FROM gallery_categories ORDER BY sort_order');
         const [images] = await pool.query('SELECT gi.*, gc.name_en as cat_name_en, gc.name_bn as cat_name_bn FROM gallery_images gi JOIN gallery_categories gc ON gi.category_id = gc.id WHERE gi.is_active = 1 ORDER BY gc.sort_order, gi.sort_order');
-        const [settings] = await pool.query('SELECT * FROM site_settings');
-        const settingsMap = {};
-        settings.forEach(s => { settingsMap[s.setting_key] = { en: s.setting_value_en, bn: s.setting_value_bn }; });
-        res.render('gallery', { categories, images, lang, t, settingsMap, title: lang === 'bn' ? 'ফটো গ্যালারি' : 'Photo Gallery' });
+
+        res.render('gallery', { categories, images, t, title: lang === 'bn' ? 'ফটো গ্যালারি' : 'Photo Gallery' });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
@@ -109,15 +103,11 @@ router.get('/gallery/image/:id', async (req, res) => {
         
         if (!images.length) return res.status(404).render('404', { title: 'Not Found', lang });
         
-        const [settings] = await pool.query('SELECT * FROM site_settings');
-        const settingsMap = {};
-        settings.forEach(s => { settingsMap[s.setting_key] = { en: s.setting_value_en, bn: s.setting_value_bn }; });
+
         
         res.render('gallery-detail', { 
             image: images[0], 
-            lang, 
             t, 
-            settingsMap, 
             title: t(images[0], 'caption', lang) 
         });
     } catch (err) {

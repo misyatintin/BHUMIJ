@@ -2,15 +2,29 @@
 <% if (success) { %><div class="alert alert-success"><span class="material-symbols-outlined">check_circle</span> Saved!</div><% } %>
 <div class="form-card">
     <h3>Site Settings (Bilingual)</h3>
-    <form method="POST" action="/admin/settings/save">
+    <form method="POST" action="/admin/settings/save" enctype="multipart/form-data">
         <% settings.forEach(s => { %>
         <div style="background:#f8fafc;padding:20px;border-radius:12px;margin-bottom:16px;border:1px solid #e2e8f0;">
             <label style="font-size:13px;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:block"><%= s.setting_key.replace(/_/g, ' ') %></label>
             <input type="hidden" name="keys" value="<%= s.setting_key %>">
-            <div class="form-row" style="margin-bottom:0">
-                <div class="form-group" style="margin-bottom:0"><label style="font-size:11px">English</label><textarea name="values_en" rows="2" style="min-height:60px"><%= s.setting_value_en %></textarea></div>
-                <div class="form-group" style="margin-bottom:0"><label style="font-size:11px">Bengali</label><textarea name="values_bn" rows="2" style="min-height:60px"><%= s.setting_value_bn %></textarea></div>
-            </div>
+            
+            <% if (s.setting_key === 'site_logo' || s.setting_key === 'site_favicon') { %>
+                <div class="form-group">
+                    <% if (s.setting_value_en) { %>
+                        <div style="margin-bottom: 15px;">
+                            <label style="font-size:11px; display: block; margin-bottom: 5px;">Current <%= s.setting_key.replace(/_/g, ' ') %>:</label>
+                            <img src="/uploads/<%= s.setting_value_en %>" style="max-height: 50px; border: 1px solid #ddd; padding: 5px; background: #fff;">
+                        </div>
+                    <% } %>
+                    <input type="file" name="<%= s.setting_key %>" accept="image/*" class="form-control">
+                    <p style="font-size: 10px; color: #64748b; margin-top: 5px;">Upload new <%= s.setting_key.replace(/_/g, ' ') %></p>
+                </div>
+            <% } else { %>
+                <div class="form-row" style="margin-bottom:0">
+                    <div class="form-group" style="margin-bottom:0"><label style="font-size:11px">English</label><textarea name="values_en" rows="2" style="min-height:60px"><%= s.setting_value_en %></textarea></div>
+                    <div class="form-group" style="margin-bottom:0"><label style="font-size:11px">Bengali</label><textarea name="values_bn" rows="2" style="min-height:60px"><%= s.setting_value_bn %></textarea></div>
+                </div>
+            <% } %>
         </div>
         <% }) %>
         <button type="submit" class="btn btn-primary"><span class="material-symbols-outlined">save</span> Save All Settings</button>

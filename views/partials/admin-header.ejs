@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> - Bhumij CMS Admin</title>
+    <link rel="icon" type="image/png" href="/uploads/<%= settingsMap.site_favicon?.en || 'favicon.png' %>">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/admin.css">
@@ -16,7 +17,11 @@
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <span class="material-symbols-outlined logo-icon">temple_hindu</span>
+                <% if (settingsMap.site_logo?.en) { %>
+                    <img src="/uploads/<%= settingsMap.site_logo.en %>" style="width: 40px; height: 40px; object-fit: contain; margin-right: 10px;">
+                <% } else { %>
+                    <span class="material-symbols-outlined logo-icon">temple_hindu</span>
+                <% } %>
                 <h2>Bhumij <span>CMS</span></h2>
             </div>
             <nav class="sidebar-nav">

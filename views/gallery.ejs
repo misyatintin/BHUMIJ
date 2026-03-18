@@ -1,211 +1,167 @@
-<!DOCTYPE html>
-<html lang="<%= lang %>">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %> - Bhumij</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#2b82ee',
-                        'dark-slate': '#1e293b',
-                    },
-                    fontFamily: {
-                        cinzel: ['Cinzel', 'serif'],
-                        outfit: ['Outfit', 'Noto Sans Bengali', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { font-family: 'Outfit', 'Noto Sans Bengali', sans-serif; cursor: default; }
-        .cinzel-font { font-family: 'Cinzel', serif; }
-        .text-gradient { background: linear-gradient(135deg, #1e293b 0%, #2b82ee 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-        .gallery-item:hover .gallery-overlay { opacity: 1; transform: translateY(0); }
-        .scroll-smooth { scroll-behavior: smooth; }
-        /* Custom Masonry-like columns */
-        .masonry { column-count: 1; column-gap: 1.5rem; }
-        @media (min-width: 640px) { .masonry { column-count: 2; } }
-        @media (min-width: 1024px) { .masonry { column-count: 3; } }
-        .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; }
-    </style>
-</head>
-<body class="bg-slate-50 overflow-x-hidden selection:bg-primary/20">
+<%- include('partials/header') %>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 py-4 px-6 md:px-12">
-        <div class="max-w-7xl mx-auto flex justify-between items-center bg-white/70 backdrop-blur-xl border border-blue-100/30 rounded-full px-6 py-2 shadow-lg shadow-blue-500/5">
-            <a href="/" class="flex items-center gap-2 group">
-                <span class="material-symbols-outlined text-primary text-2xl group-hover:rotate-12 transition-transform">temple_hindu</span>
-                <span class="cinzel-font text-xl font-bold tracking-tight text-dark-slate"><%= lang === 'bn' ? 'ভূমিজ' : 'BHUMIJ' %></span>
-            </a>
-            <div class="flex items-center gap-6">
-                <a href="/" class="text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'প্রচ্ছদ' : 'Home' %></a>
-                <div class="flex items-center bg-slate-100 rounded-full p-1">
-                    <a href="?lang=en" class="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all <%= lang === 'en' ? 'bg-primary text-white shadow-md' : 'text-slate-500 hover:text-primary' %>">EN</a>
-                    <a href="?lang=bn" class="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all <%= lang === 'bn' ? 'bg-primary text-white shadow-md' : 'text-slate-500 hover:text-primary' %>">বাং</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+<style>
+    .masonry { column-count: 1; column-gap: 1.5rem; }
+    @media (min-width: 640px) { .masonry { column-count: 2; } }
+    @media (min-width: 1024px) { .masonry { column-count: 3; } }
+    .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; }
+    .gallery-item:hover .gallery-overlay { opacity: 1; transform: translateY(0); }
+</style>
 
-    <main class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
-        <!-- Header -->
-        <div class="text-center mb-16">
-            <h1 class="cinzel-font text-4xl md:text-5xl font-black text-dark-slate mb-4">
-                <%= lang === 'bn' ? 'ফটো' : 'Photo' %> <span class="text-gradient"><%= lang === 'bn' ? 'গ্যালারি' : 'Gallery' %></span>
-            </h1>
-            <p class="text-slate-500 max-w-2xl mx-auto">
-                <%= lang === 'bn' ? 'ভূমিজ সম্প্রদায়ের সংস্কৃতি, ঐতিহ্য এবং বিভিন্ন কার্যক্রমের এক অনন্য সংগ্রহশালা।' : 'A unique collection depicting the culture, heritage, and various activities of the Bhumij community.' %>
-            </p>
-        </div>
+<main class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-16">
+        <span class="text-primary font-bold text-sm uppercase tracking-[0.3em]"><%= lang === 'bn' ? 'ফটো সংকলন' : 'Visual Archive' %></span>
+        <h1 class="cinzel-font text-4xl md:text-5xl font-black text-dark-slate mt-4 mb-4">
+            <%= lang === 'bn' ? 'ফটো' : 'Photo' %> <span class="text-gradient"><%= lang === 'bn' ? 'গ্যালারি' : 'Gallery' %></span>
+        </h1>
+        <div class="w-24 h-1 bg-primary mx-auto rounded-full mb-8"></div>
+        <p class="text-slate-500 max-w-2xl mx-auto font-light">
+            <%= lang === 'bn' ? 'ভূমিজ সম্প্রদায়ের সংস্কৃতি, ঐতিহ্য এবং বিভিন্ন কার্যক্রমের এক অনন্য সংগ্রহশালা।' : 'A unique collection depicting the culture, heritage, and various activities of the Bhumij community.' %>
+        </p>
+    </div>
 
-        <!-- Filters -->
-        <div class="flex flex-wrap justify-center gap-2 mb-12">
-            <button class="filter-btn active px-6 py-2 rounded-full text-sm font-semibold transition-all shadow-sm bg-primary text-white" data-filter="all">
-                <%= lang === 'bn' ? 'সব' : 'All' %>
+    <!-- Filters -->
+    <div class="flex flex-wrap justify-center gap-3 mb-16">
+        <button class="filter-btn active px-8 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest border transition-all bg-primary text-white border-primary shadow-lg shadow-primary/20" data-filter="all">
+            <%= lang === 'bn' ? 'সব' : 'All' %>
+        </button>
+        <% categories.forEach(c => { %>
+            <button class="filter-btn px-8 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest border transition-all bg-white text-slate-500 border-slate-200 hover:border-primary hover:text-primary hover:shadow-lg" data-filter="cat-<%= c.id %>">
+                <%= t(c, 'name', lang) %>
             </button>
-            <% categories.forEach(c => { %>
-                <button class="filter-btn px-6 py-2 rounded-full text-sm font-semibold transition-all shadow-sm bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-filter="cat-<%= c.id %>">
-                    <%= t(c, 'name', lang) %>
-                </button>
-            <% }) %>
-        </div>
+        <% }) %>
+    </div>
 
-        <!-- Gallery Grid -->
-        <div class="masonry" id="galleryGrid">
-            <% images.forEach(img => { %>
-                <div class="masonry-item gallery-item group relative overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer" 
-                     data-id="<%= img.id %>"
-                     data-category="cat-<%= img.category_id %>"
-                     data-src="/uploads/<%= img.image_path %>"
-                     data-caption="<%= t(img, 'caption', lang) %>"
-                     data-cat="<%= lang === 'bn' ? img.cat_name_bn : img.cat_name_en %>"
-                     onclick="handleGalleryClick(this)">
-                    
-                    <img src="/uploads/<%= img.image_path %>" alt="<%= t(img, 'caption', lang) %>" loading="lazy" class="w-full h-auto object-cover transform group-hover:scale-110 transition-transform duration-700">
-                    
-                    <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-dark-slate/90 via-dark-slate/20 to-transparent opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 flex flex-col justify-end p-6">
-                        <span class="text-xs font-bold text-primary uppercase tracking-widest mb-1"><%= lang === 'bn' ? (img.cat_name_bn || img.cat_name_en) : img.cat_name_en %></span>
-                        <h3 class="text-white font-bold text-lg leading-tight"><%= t(img, 'caption', lang) %></h3>
-                        <div class="mt-4 flex items-center text-white/60 text-xs">
-                            <span class="material-symbols-outlined text-sm mr-1">zoom_in</span>
-                            <%= lang === 'bn' ? 'বিস্তারিত তথ্য' : 'View Detailed' %>
-                        </div>
+    <!-- Gallery Grid -->
+    <div class="masonry" id="galleryGrid">
+        <% images.forEach(img => { %>
+            <div class="masonry-item gallery-item group relative overflow-hidden rounded-[32px] bg-white shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer border border-slate-100" 
+                 data-id="<%= img.id %>"
+                 data-category="cat-<%= img.category_id %>"
+                 data-src="/uploads/<%= img.image_path %>"
+                 data-caption="<%= t(img, 'caption', lang) %>"
+                 data-cat="<%= lang === 'bn' ? (img.cat_name_bn || img.cat_name_en) : img.cat_name_en %>"
+                 onclick="handleGalleryClick(this)">
+                
+                <img src="/uploads/<%= img.image_path %>" alt="<%= t(img, 'caption', lang) %>" loading="lazy" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700">
+                
+                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-dark-slate/90 via-dark-slate/20 to-transparent opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 flex flex-col justify-end p-8">
+                    <span class="text-[10px] font-bold text-primary uppercase tracking-widest mb-2"><%= lang === 'bn' ? (img.cat_name_bn || img.cat_name_en) : img.cat_name_en %></span>
+                    <h3 class="text-white font-bold text-lg leading-tight cinzel-font"><%= t(img, 'caption', lang) %></h3>
+                    <div class="mt-4 flex items-center text-white/60 text-[10px] font-bold uppercase tracking-widest">
+                        <span class="material-symbols-outlined text-sm mr-2">zoom_in</span>
+                        <%= lang === 'bn' ? 'বিস্তারিত তথ্য' : 'View Detailed' %>
                     </div>
                 </div>
-            <% }) %>
-        </div>
-    </main>
-
-    <!-- Lightbox Modal -->
-    <div id="lightbox" class="fixed inset-0 z-[100] bg-dark-slate/95 hidden backdrop-blur-md flex items-center justify-center p-4 md:p-12 opacity-0 transition-opacity duration-300">
-        <button onclick="closeLightbox()" class="absolute top-8 right-8 text-white hover:text-primary transition-colors">
-            <span class="material-symbols-outlined text-4xl">close</span>
-        </button>
-        <div class="max-w-6xl w-full h-full flex flex-col md:flex-row gap-8 items-center justify-center">
-            <div class="flex-1 h-full flex items-center justify-center">
-                <img id="lightboxImg" src="" alt="" class="max-w-full max-h-full rounded-2xl shadow-2xl object-contain ring-1 ring-white/10">
             </div>
-            <div class="w-full md:w-80 text-white">
-                <span id="lightboxCat" class="text-primary font-bold tracking-widest border-l-2 border-primary pl-4 mb-4 block text-sm uppercase"></span>
-                <h2 id="lightboxCaption" class="text-2xl font-black cinzel-font mb-4"></h2>
-                <div class="h-px bg-white/10 w-full mb-6"></div>
-                <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                    <%= lang === 'bn' ? 'এই চিত্রটি ভূমিজ ঐতিহ্যের একটি গুরুত্বপূর্ণ দিক তুলে ধরে।' : 'This image showcases a significant aspect of the Bhumij heritage.' %>
-                </p>
-                <a id="lightboxDetailLink" href="#" class="inline-flex px-8 py-3 bg-primary text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:scale-105 transition-all mb-8">
-                    <%= lang === 'bn' ? 'বিস্তারিত বিবরণ' : 'View Full Details' %>
-                </a>
-                <div class="flex gap-4">
-                    <button class="p-3 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
-                        <span class="material-symbols-outlined">share</span>
-                    </button>
-                    <button class="p-3 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
-                        <span class="material-symbols-outlined">download</span>
-                    </button>
-                </div>
+        <% }) %>
+    </div>
+</main>
+
+<!-- Lightbox Modal -->
+<div id="lightbox" class="fixed inset-0 z-[100] bg-dark-slate/95 hidden backdrop-blur-md flex items-center justify-center p-4 md:p-12 opacity-0 transition-opacity duration-300">
+    <button onclick="closeLightbox()" class="absolute top-8 right-8 text-white hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-4xl">close</span>
+    </button>
+    <div class="max-w-6xl w-full h-full flex flex-col md:flex-row gap-8 items-center justify-center">
+        <div class="flex-1 h-full flex items-center justify-center">
+            <img id="lightboxImg" src="" alt="" class="max-w-full max-h-[80vh] rounded-[40px] shadow-2xl object-contain ring-1 ring-white/10">
+        </div>
+        <div class="w-full md:w-96 text-white p-8 bg-white/5 backdrop-blur-xl rounded-[40px] border border-white/10">
+            <span id="lightboxCat" class="text-primary font-bold tracking-[0.3em] border-l-4 border-primary pl-4 mb-6 block text-[10px] uppercase"></span>
+            <h2 id="lightboxCaption" class="text-3xl font-black cinzel-font mb-6 leading-tight"></h2>
+            <div class="h-px bg-white/10 w-full mb-8"></div>
+            <p class="text-slate-400 text-sm leading-relaxed mb-8 font-light">
+                <%= lang === 'bn' ? 'এই চিত্রটি ভূমিজ ঐতিহ্যের একটি গুরুত্বপূর্ণ দিক তুলে ধরে। এটি আমাদের পূর্বপুরুষদের গভীর সংস্কৃতি ও প্রকৃতির সাথে আমাদের সম্পর্কের প্রতিফলন।' : 'This image showcases a significant aspect of the Bhumij heritage, reflecting our deep culture and connection with nature.' %>
+            </p>
+            <a id="lightboxDetailLink" href="#" class="flex justify-center px-8 py-4 bg-primary text-white rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:scale-105 hover:shadow-lg hover:shadow-primary/30 transition-all mb-8">
+                <%= lang === 'bn' ? 'বিস্তারিত বিবরণ' : 'View Full Details' %>
+            </a>
+            <div class="flex gap-4">
+                <button class="flex-1 py-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest border border-white/5">
+                    <span class="material-symbols-outlined text-lg">share</span> Share
+                </button>
+                <button class="flex-1 py-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest border border-white/5">
+                    <span class="material-symbols-outlined text-lg">download</span> Save
+                </button>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        function handleGalleryClick(el) {
-            openLightbox(el.dataset.src, el.dataset.caption, el.dataset.cat, el.dataset.id);
-        }
+<script>
+    function handleGalleryClick(el) {
+        openLightbox(el.dataset.src, el.dataset.caption, el.dataset.cat, el.dataset.id);
+    }
 
-        // Filtering
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const galleryItems = document.querySelectorAll('.gallery-item');
+    // Filtering
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
 
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterBtns.forEach(b => {
-                    b.classList.remove('bg-primary', 'text-white');
-                    b.classList.add('bg-white', 'text-slate-600');
-                });
-                btn.classList.add('bg-primary', 'text-white');
-                btn.classList.remove('bg-white', 'text-slate-600');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => {
+                b.classList.remove('bg-primary', 'text-white', 'shadow-lg', 'shadow-primary/20');
+                b.classList.add('bg-white', 'text-slate-500');
+            });
+            btn.classList.add('bg-primary', 'text-white', 'shadow-lg', 'shadow-primary/20');
+            btn.classList.remove('bg-white', 'text-slate-500');
 
-                const filter = btn.dataset.filter;
-                galleryItems.forEach(item => {
-                    item.style.opacity = '0';
-                    item.style.transform = 'scale(0.9)';
-                    setTimeout(() => {
-                        if (filter === 'all' || item.dataset.category === filter) {
-                            item.style.display = 'block';
-                            setTimeout(() => {
-                                item.style.opacity = '1';
-                                item.style.transform = 'scale(1)';
-                            }, 50);
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    }, 300);
-                });
+            const filter = btn.dataset.filter;
+            galleryItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    if (filter === 'all' || item.dataset.category === filter) {
+                        item.style.display = 'block';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'scale(1)';
+                        }, 50);
+                    } else {
+                        item.style.display = 'none';
+                    }
+                }, 300);
             });
         });
+    });
 
-        // Lightbox
-        function openLightbox(src, caption, cat, id) {
-            const lb = document.getElementById('lightbox');
-            const lbImg = document.getElementById('lightboxImg');
-            const lbCap = document.getElementById('lightboxCaption');
-            const lbCat = document.getElementById('lightboxCat');
-            const lbDetail = document.getElementById('lightboxDetailLink');
+    // Lightbox
+    function openLightbox(src, caption, cat, id) {
+        const lb = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lightboxImg');
+        const lbCap = document.getElementById('lightboxCaption');
+        const lbCat = document.getElementById('lightboxCat');
+        const lbDetail = document.getElementById('lightboxDetailLink');
 
-            lbImg.src = src;
-            lbCap.innerText = caption;
-            lbCat.innerText = cat;
-            if (lbDetail) lbDetail.href = '/gallery/image/' + id;
+        lbImg.src = src;
+        lbCap.innerText = caption;
+        lbCat.innerText = cat;
+        if (lbDetail) lbDetail.href = '/gallery/image/' + id;
 
-            lb.classList.remove('hidden');
-            lb.classList.add('flex');
-            setTimeout(() => lb.classList.add('opacity-100'), 50);
-            document.body.style.overflow = 'hidden';
-        }
+        lb.classList.remove('hidden');
+        lb.classList.add('flex');
+        setTimeout(() => lb.classList.add('opacity-100'), 50);
+        document.body.style.overflow = 'hidden';
+    }
 
-        function closeLightbox() {
-            const lb = document.getElementById('lightbox');
-            lb.classList.remove('opacity-100');
-            setTimeout(() => {
-                lb.classList.add('hidden');
-                lb.classList.remove('flex');
-            }, 300);
-            document.body.style.overflow = '';
-        }
+    function closeLightbox() {
+        const lb = document.getElementById('lightbox');
+        lb.classList.remove('opacity-100');
+        setTimeout(() => {
+            lb.classList.add('hidden');
+            lb.classList.remove('flex');
+        }, 300);
+        document.body.style.overflow = '';
+    }
 
-        // Close on ESC
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeLightbox();
-        });
-    </script>
-</body>
-</html>
+    // Close on ESC
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeLightbox();
+    });
+</script>
+
+<%- include('partials/footer') %>
+
+

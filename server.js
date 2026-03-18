@@ -44,16 +44,28 @@ app.use(session({
     }
 }));
 
-// Global middleware for language
-app.use((req, res, next) => {
+const pool = require('./config/database');
+
+// Global middleware for language and settings
+app.use(async (req, res, next) => {
     try {
         if (req.query.lang) {
             req.session.lang = req.query.lang;
         }
         res.locals.lang = req.session.lang || 'en';
         res.locals.user = req.session.user || null;
+
+        // Fetch site settings globally
+        const [settings] = await pool.query('SELECT * FROM site_settings');
+        const settingsMap = {};
+        settings.forEach(s => {
+            settingsMap[s.setting_key] = { en: s.setting_value_en, bn: s.setting_value_bn };
+        });
+        res.locals.settingsMap = settingsMap;
+        
         next();
     } catch (err) {
+        console.error('Global middleware error:', err);
         next(err);
     }
 });

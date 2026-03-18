@@ -1,15 +1,17 @@
 const pool = require('./config/database');
-async function check() {
-    const tables = ['geographic_states', 'achievements'];
-    for (const tableName of tables) {
-        try {
-            const [columns] = await pool.query(`DESCRIBE ${tableName}`);
-            console.log(`\nTable: ${tableName}`);
-            console.log(columns.map(c => c.Field));
-        } catch (e) {
-            console.log(`\nTable ${tableName} not found or error.`);
-        }
+
+async function checkSettings() {
+    try {
+        const [rows] = await pool.query('SELECT setting_key FROM site_settings');
+        console.log('Current Setting Keys:');
+        rows.forEach(row => {
+            console.log(row.setting_key);
+        });
+        process.exit(0);
+    } catch (err) {
+        console.error('Error:', err);
+        process.exit(1);
     }
-    process.exit();
 }
-check();
+
+checkSettings();

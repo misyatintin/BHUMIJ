@@ -1,100 +1,5 @@
-<!DOCTYPE html>
-<html lang="<%= lang %>">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#2b82ee',
-                        'sky-blue': '#87CEEB',
-                        'maya-blue': '#77B5FE',
-                        'soft-blue': '#f0f9ff',
-                        'dark-slate': '#1e293b',
-                    },
-                    fontFamily: {
-                        cinzel: ['Cinzel', 'serif'],
-                        outfit: ['Outfit', 'Noto Sans Bengali', 'sans-serif'],
-                    },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'slow-glow': 'glow 3s infinite alternate',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        },
-                        glow: {
-                            '0%': { textShadow: '0 0 5px rgba(119, 181, 254, 0.2)' },
-                            '100%': { textShadow: '0 0 20px rgba(119, 181, 254, 0.6)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Outfit', 'Noto Sans Bengali', sans-serif; background-color: #ffffff; color: #1e293b; overflow-x: hidden; }
-        .cinzel-font { font-family: 'Cinzel', serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(119, 181, 254, 0.2); }
-        .text-gradient { background: linear-gradient(135deg, #1e3a8a, #2b82ee, #77B5FE); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .carousel-item { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease-in-out; }
-        .carousel-item.active { opacity: 1; }
-        .tilt-card { transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1); transform-style: preserve-3d; }
-        .tilt-card:hover { transform: rotateX(5deg) rotateY(-5deg) translateZ(20px); }
-        .state-active path { fill: #77B5FE !important; stroke: #fff !important; stroke-width: 2px !important; filter: drop-shadow(0 0 10px rgba(119, 181, 254, 0.8)); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .pin-container:hover .pop-tooltip { opacity: 1; }
-    </style>
-</head>
-<body class="custom-scrollbar selection:bg-primary/20">
+<%- include('partials/header') %>
 
-<!-- Navigation -->
-<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-4 px-6 md:px-12">
-    <div class="max-w-7xl mx-auto flex justify-between items-center bg-white/70 backdrop-blur-xl border border-blue-100/30 rounded-full px-6 py-2 shadow-lg shadow-blue-500/5">
-        <a href="#home" class="flex items-center gap-2 group">
-            <span class="material-symbols-outlined text-primary text-2xl group-hover:rotate-12 transition-transform">temple_hindu</span>
-            <span class="cinzel-font text-xl font-bold tracking-tight text-dark-slate"><%= lang === 'bn' ? 'ভূমিজ' : 'BHUMIJ' %></span>
-        </a>
-        
-        <div class="hidden md:flex items-center gap-1" id="navLinks">
-            <a href="#home" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'প্রচ্ছদ' : 'Home' %></a>
-            <a href="#etymology" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'ব্যুৎপত্তি' : 'Etymology' %></a>
-            <a href="#geography" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'ভূগোল' : 'Geography' %></a>
-            <a href="#culture" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'সংস্কৃতি' : 'Culture' %></a>
-            <a href="#history" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'সময়রেখা' : 'Timeline' %></a>
-            <a href="#people" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'ব্যক্তিত্ব' : 'Notable' %></a>
-            <a href="#articles" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'প্রবন্ধ' : 'Articles' %></a>
-            <a href="#gallery" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'গ্যালারি' : 'Gallery' %></a>
-            <a href="#members" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"><%= lang === 'bn' ? 'সদস্য' : 'Members' %></a>
-        </div>
-
-        <div class="flex items-center gap-3">
-            <!-- Language Switch -->
-            <div class="flex items-center bg-slate-100 rounded-full p-1">
-                <a href="?lang=en" class="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all <%= lang === 'en' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-slate-500 hover:text-primary' %>">EN</a>
-                <a href="?lang=bn" class="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all <%= lang === 'bn' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-slate-500 hover:text-primary' %>">বাং</a>
-            </div>
-            <button id="menuBtn" class="md:hidden flex p-2 text-slate-600">
-                <span class="material-symbols-outlined">menu</span>
-            </button>
-        </div>
-    </div>
-</nav>
 
 <!-- Hero Section -->
 <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
@@ -149,19 +54,19 @@
 </section>
 
 <!-- Stats Bar -->
-<section class="py-12 px-6">
-    <div class="max-w-7xl mx-auto bg-slate-50 border border-slate-100 rounded-[40px] p-10 grid grid-cols-1 md:grid-cols-3 gap-12 text-center shadow-inner">
-        <div class="space-y-2">
-            <div class="text-4xl lg:text-5xl font-black cinzel-font text-primary stat-num" data-target="<%= members.length %>">0</div>
-            <div class="text-xs font-bold uppercase tracking-widest text-slate-400"><%= lang === 'bn' ? 'বোর্ড সদস্য' : 'Board Members' %></div>
+<section class="py-12 px-6 -mt-20 relative z-20">
+    <div class="max-w-7xl mx-auto bg-white border border-slate-100/50 rounded-[40px] p-10 grid grid-cols-1 md:grid-cols-3 gap-12 text-center shadow-2xl shadow-indigo-500/10 backdrop-blur-sm">
+        <div class="space-y-2 group">
+            <div class="text-4xl lg:text-7xl font-black cinzel-font text-gradient stat-num" data-target="<%= members.length %>">0</div>
+            <div class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 group-hover:text-primary transition-colors"><%= lang === 'bn' ? 'বোর্ড সদস্য' : 'Board Members' %></div>
         </div>
-        <div class="space-y-2 border-y md:border-y-0 md:border-x border-slate-200 py-8 md:py-0">
-            <div class="text-4xl lg:text-5xl font-black cinzel-font text-maya-blue stat-num" data-target="<%= articles.length %>">0</div>
-            <div class="text-xs font-bold uppercase tracking-widest text-slate-400"><%= lang === 'bn' ? 'প্রবন্ধ' : 'Articles' %></div>
+        <div class="space-y-2 border-y md:border-y-0 md:border-x border-slate-100 py-8 md:py-0 group">
+            <div class="text-4xl lg:text-7xl font-black cinzel-font text-gradient stat-num" data-target="<%= articles.length %>">0</div>
+            <div class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 group-hover:text-secondary transition-colors"><%= lang === 'bn' ? 'প্রবন্ধ' : 'Articles' %></div>
         </div>
-        <div class="space-y-2">
-            <div class="text-4xl lg:text-5xl font-black cinzel-font text-sky-blue stat-num" data-target="<%= poems.length %>">0</div>
-            <div class="text-xs font-bold uppercase tracking-widest text-slate-400"><%= lang === 'bn' ? 'কবিতা' : 'Poems' %></div>
+        <div class="space-y-2 group">
+            <div class="text-4xl lg:text-7xl font-black cinzel-font text-gradient stat-num" data-target="<%= poems.length %>">0</div>
+            <div class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 group-hover:text-accent transition-colors"><%= lang === 'bn' ? 'কবিতা' : 'Poems' %></div>
         </div>
     </div>
 </section>
@@ -208,8 +113,10 @@
 
 <!-- Geographic Core Section -->
 <% if (geoStates && geoStates.length) { %>
-<section id="geography" class="py-32 px-6 bg-slate-50 relative overflow-hidden">
-    <div class="max-w-7xl mx-auto">
+<!-- Geography Section -->
+<section id="geography" class="py-32 px-6 bg-slate-50/50 relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-1/2 h-full bg-indigo-100/30 -skew-x-12 translate-x-1/2 pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto relative z-10">
         <div class="flex flex-col mb-20 space-y-4">
             <span class="text-primary font-bold text-sm uppercase tracking-[0.4em]"><%= lang === 'bn' ? 'আঞ্চলিক উত্তরাধিকার' : 'Territorial Legacy' %></span>
             <h2 class="cinzel-font text-4xl md:text-6xl font-black text-dark-slate"><%= lang === 'bn' ? 'ভৌগোলিক' : 'Geographic' %> <span class="text-gradient"><%= lang === 'bn' ? 'কেন্দ্র' : 'Core' %></span></h2>
@@ -249,7 +156,7 @@
                                     py = ((maxLat - s.latitude) / (maxLat - minLat)) * svgH;
                                 }
                             %>
-                            <g id="state-<%= s.state_code %>" class="state-group cursor-pointer transition-all duration-500" onmouseenter="activateState('<%= s.state_code %>')" onmouseleave="deactivateState('<%= s.state_code %>')">
+                            <g id="state-<%= s.state_code %>" class="state-group cursor-pointer transition-all duration-500" onmouseenter="activateState('<%= s.state_code %>', true)" onmouseleave="deactivateState('<%= s.state_code %>')">
                                 <% if (s.svg_path) { %>
                                     <path d="<%= s.svg_path %>" fill="#e2e8f0" stroke="#334155" stroke-width="1.5" class="transition-colors duration-500 hover:fill-primary/30"/>
                                 <% } %>
@@ -288,7 +195,7 @@
             </div>
             <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 perspective-1000">
                 <% geoStates.forEach((s, i) => { %>
-                <div id="card-<%= s.state_code %>" class="tilt-card group relative h-[280px] md:h-[320px] rounded-[40px] overflow-hidden shadow-xl border border-white hover:border-primary/20 transition-all cursor-pointer <%= i % 2 !== 0 ? 'mt-0 sm:mt-12' : '' %>" onmouseenter="activateState('<%= s.state_code %>')" onmouseleave="deactivateState('<%= s.state_code %>')">
+                <div id="card-<%= s.state_code %>" class="tilt-card group relative h-[280px] md:h-[320px] rounded-[40px] overflow-hidden shadow-xl border border-white hover:border-primary/20 transition-all cursor-pointer <%= i % 2 !== 0 ? 'mt-0 sm:mt-12' : '' %>" onmouseenter="activateState('<%= s.state_code %>', false)" onmouseleave="deactivateState('<%= s.state_code %>')">
                     <% if (s.image_path) { %>
                     <img src="/uploads/<%= s.image_path %>" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     <% } else { %>
@@ -435,7 +342,7 @@
 </section>
 <% } %>
 <% if (greetings.length) { %>
-<section id="greetings" class="py-24 px-6 bg-soft-blue/20">
+<section id="greetings" class="py-24 px-6 bg-gradient-to-br from-indigo-50 to-blue-50">
     <div class="max-w-7xl mx-auto">
         <div class="text-center space-y-4 mb-20">
             <span class="text-primary font-bold text-sm uppercase tracking-[0.3em]"><%= lang === 'bn' ? 'শুভেচ্ছা বার্তা' : 'Messages' %></span>
@@ -480,7 +387,7 @@
 
 <!-- Articles Section -->
 <% if (articles.length) { %>
-<section id="articles" class="py-24 px-6 bg-white">
+<section id="articles" class="py-24 px-6 bg-gradient-to-br from-white to-slate-50">
     <div class="max-w-7xl mx-auto">
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
             <div class="space-y-4">
@@ -586,16 +493,30 @@
             <% }) %>
         </div>
 
-        <div class="flex overflow-x-auto gap-6 pb-12 snap-x no-scrollbar scroll-smooth" id="galleryGrid">
+        <div class="flex overflow-x-auto gap-8 pb-12 snap-x no-scrollbar scroll-smooth" id="galleryGrid">
             <% galleryImages.forEach(img => { %>
-            <a href="/gallery/image/<%= img.id %>" class="gallery-img flex-shrink-0 w-80 group relative rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all cursor-pointer aspect-square snap-center" data-category="cat-<%= img.category_id %>">
-                <img src="/uploads/<%= img.image_path %>" alt="<%= t(img, 'caption', lang) %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy">
-                <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-dark-slate/90 via-dark-slate/40 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <p class="text-white text-sm font-bold tracking-wide"><%= t(img, 'caption', lang) %></p>
-                    <div class="w-8 h-1 bg-primary mt-2 rounded-full"></div>
+            <a href="/gallery/image/<%= img.id %>" class="gallery-img flex-shrink-0 w-[280px] md:w-[350px] group relative rounded-[40px] overflow-hidden shadow-xl hover:shadow-2xl transition-all cursor-pointer aspect-square snap-center border-4 border-white bg-white" data-category="cat-<%= img.category_id %>">
+                <img src="/uploads/<%= img.image_path %>" alt="<%= t(img, 'caption', lang) %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy">
+                <div class="absolute inset-0 bg-gradient-to-t from-dark-slate/90 via-dark-slate/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8">
+                    <span class="text-[10px] font-bold text-primary uppercase tracking-widest mb-2"><%= lang === 'bn' ? (img.cat_name_bn || img.cat_name_en) : img.cat_name_en %></span>
+                    <p class="text-white text-lg font-bold tracking-wide cinzel-font leading-tight"><%= t(img, 'caption', lang) %></p>
+                    <div class="w-12 h-1 bg-primary mt-4 rounded-full"></div>
                 </div>
             </a>
             <% }) %>
+        </div>
+
+        <div class="max-w-7xl mx-auto mt-4 px-6 md:px-12">
+            <div class="scroll-indicator-container">
+                <div id="galleryProgress" class="scroll-indicator-bar"></div>
+            </div>
+        </div>
+
+        <div class="text-center mt-12">
+            <a href="/gallery" class="inline-flex items-center gap-3 px-10 py-4 bg-white border border-slate-200 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-dark-slate hover:bg-primary hover:text-white hover:border-primary transition-all shadow-xl shadow-blue-500/5 group">
+                <%= lang === 'bn' ? 'সম্পূর্ণ গ্যালারি দেখুন' : 'Explore Full Gallery' %>
+                <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform">arrow_forward</span>
+            </a>
         </div>
     </div>
 </section>
@@ -651,63 +572,7 @@
     </div>
 </section>
 <% } %>
-
-<!-- Footer -->
-<footer class="relative bg-[#0a111a] pt-32 pb-12 px-6 overflow-hidden">
-    <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(#77B5FE 1px, transparent 1px); background-size: 30px 30px;"></div>
-    <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
-
-    <div class="max-w-7xl mx-auto relative z-10">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
-            <!-- Branding -->
-            <div class="space-y-8">
-                <a href="#" class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
-                        <span class="material-symbols-outlined text-white text-3xl">temple_hindu</span>
-                    </div>
-                    <span class="cinzel-font text-2xl font-bold text-white tracking-widest"><%= lang === 'bn' ? 'ভূমিজ' : 'BHUMIJ' %></span>
-                </a>
-                <p class="text-slate-400 font-light leading-relaxed">
-                    <%= lang === 'bn' ? (settingsMap.footer_text?.bn || '') : (settingsMap.footer_text?.en || '') %>
-                </p>
-            </div>
-
-            <!-- Navigation -->
-            <div class="space-y-6">
-                <h4 class="cinzel-font text-lg font-bold text-white uppercase tracking-widest border-b border-primary/20 pb-2 inline-block"><%= lang === 'bn' ? 'দ্রুত লিঙ্ক' : 'Explore' %></h4>
-                <ul class="space-y-4">
-                    <li><a href="#greetings" class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:w-4 transition-all"></span> <%= lang === 'bn' ? 'শুভেচ্ছা বার্তা' : 'Greetings' %></a></li>
-                    <li><a href="#articles" class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:w-4 transition-all"></span> <%= lang === 'bn' ? 'প্রবন্ধ' : 'Articles' %></a></li>
-                    <li><a href="#poems" class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:w-4 transition-all"></span> <%= lang === 'bn' ? 'কবিতা' : 'Poems' %></a></li>
-                    <li><a href="#members" class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:w-4 transition-all"></span> <%= lang === 'bn' ? 'সদস্য' : 'Members' %></a></li>
-                    <li><a href="#gallery" class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:w-4 transition-all"></span> <%= lang === 'bn' ? 'গ্যালারি' : 'Gallery' %></a></li>
-                </ul>
-            </div>
-
-            <!-- Contact -->
-            <div class="space-y-6">
-                <h4 class="cinzel-font text-lg font-bold text-white uppercase tracking-widest border-b border-primary/20 pb-2 inline-block"><%= lang === 'bn' ? 'যোগাযোগ' : 'Contact' %></h4>
-                <p class="text-slate-400 text-sm leading-relaxed"><%= lang === 'bn' ? (settingsMap.contact_address?.bn || '') : (settingsMap.contact_address?.en || '') %></p>
-            </div>
-
-            <!-- Published By -->
-            <div class="space-y-6">
-                <h4 class="cinzel-font text-lg font-bold text-white uppercase tracking-widest border-b border-primary/20 pb-2 inline-block"><%= lang === 'bn' ? 'প্রকাশক' : 'Published By' %></h4>
-                <p class="text-slate-400 text-sm leading-relaxed"><%= lang === 'bn' ? (settingsMap.prepared_by?.bn || '') : (settingsMap.prepared_by?.en || '') %></p>
-            </div>
-        </div>
-
-        <!-- Footer Bottom -->
-        <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                &copy; 2026 <%= lang === 'bn' ? 'পশ্চিমবঙ্গ ভূমিজ উন্নয়ন পর্ষদ — সর্বস্বত্ব সংরক্ষিত' : 'West Bengal Bhumij Development Board — All Rights Reserved' %>
-            </p>
-            <div class="flex items-center gap-3">
-                <a href="/admin" class="text-[10px] font-bold text-slate-500 uppercase tracking-widest hover:text-primary transition-colors">Admin</a>
-            </div>
-        </div>
-    </div>
-</footer>
+<div id="stateDataMap" style="display:none;" data-json='<%- JSON.stringify(geoStates.reduce((acc, s) => { acc[s.state_code] = { title: lang === "bn" ? (s.name_bn || s.name_en) : s.name_en, desc: lang === "bn" ? (s.description_bn || s.description_en) : s.description_en, img: s.image_path, pop: s.population, lat: s.latitude, lng: s.longitude }; return acc; }, {})) %>'></div>
 
 <script>
     // Hero Carousel
@@ -729,13 +594,13 @@
         progress.style.transition = 'none';
         progress.style.height = '0%';
         setTimeout(() => {
-            progress.style.transition = 'height 5s linear';
+            progress.style.transition = 'height 3s linear';
             progress.style.height = '100%';
         }, 50);
     }
 
     if (count > 1) {
-        setInterval(nextSlide, 5000);
+        setInterval(nextSlide, 3000);
         resetProgress();
     }
 
@@ -762,36 +627,42 @@
     }, { threshold: 0.5 });
     stats.forEach(stat => statsObserver.observe(stat));
 
-    // Gallery Auto-scroll
     const galleryGrid = document.getElementById('galleryGrid');
     let scrollInterval;
     const startAutoScroll = () => {
+        stopAutoScroll(); 
         scrollInterval = setInterval(() => {
-            if (galleryGrid.scrollLeft + galleryGrid.offsetWidth >= galleryGrid.scrollWidth) {
+            if (!galleryGrid) return;
+            if (galleryGrid.scrollLeft + galleryGrid.offsetWidth >= galleryGrid.scrollWidth - 10) {
                 galleryGrid.scrollTo({ left: 0, behavior: 'smooth' });
             } else {
                 galleryGrid.scrollBy({ left: 340, behavior: 'smooth' });
             }
-        }, 3000);
+        }, 2000);
     };
-    const stopAutoScroll = () => clearInterval(scrollInterval);
-    
+    const stopAutoScroll = () => {
+        if (scrollInterval) clearInterval(scrollInterval);
+    };
+    const galleryProgress = document.getElementById('galleryProgress');
+    const updateProgress = () => {
+        if (!galleryGrid || !galleryProgress) return;
+        const maxScroll = galleryGrid.scrollWidth - galleryGrid.offsetWidth;
+        const percentage = (galleryGrid.scrollLeft / maxScroll) * 100;
+        galleryProgress.style.width = percentage + '%';
+    };
+
     if (galleryGrid) {
         startAutoScroll();
         galleryGrid.addEventListener('mouseenter', stopAutoScroll);
         galleryGrid.addEventListener('mouseleave', startAutoScroll);
+        galleryGrid.addEventListener('scroll', updateProgress);
     }
-</script>
 
-<!-- Map Data (Hidden for JS ingestion) -->
-<div id="stateDataMap" style="display:none;" data-json='<%- JSON.stringify(geoStates.reduce((acc, s) => { acc[s.state_code] = { title: lang === "bn" ? (s.name_bn || s.name_en) : s.name_en, desc: lang === "bn" ? (s.description_bn || s.description_en) : s.description_en, img: s.image_path, pop: s.population, lat: s.latitude, lng: s.longitude }; return acc; }, {})) %>'></div>
-
-<script>
     // Map Interactions
     const stateDataEl = document.getElementById('stateDataMap');
     const stateData = stateDataEl ? JSON.parse(stateDataEl.dataset.json) : {};
 
-    function activateState(id) {
+    function activateState(id, shouldScroll = true) {
         document.querySelectorAll('.state-group').forEach(el => el.classList.remove('state-active'));
         const stateEl = document.getElementById('state-' + id);
         if (stateEl) stateEl.classList.add('state-active');
@@ -799,7 +670,9 @@
         const card = document.getElementById('card-' + id);
         if (card) { 
             card.classList.add('ring-4', 'ring-primary/20', 'scale-105'); 
-            card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            if (shouldScroll) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
         }
         if (stateData[id]) {
             const mt = document.getElementById('mapTitle');
@@ -844,48 +717,12 @@
     // Smooth Scroll
     document.querySelectorAll('a[href^="#"]').forEach(a => {
         a.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href === '#') return;
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const target = document.querySelector(href);
             if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     });
-
-    // Navbar Scroll
-    window.onscroll = () => {
-        const nav = document.getElementById('navbar');
-        const el = nav.querySelector('.max-w-7xl');
-        if (window.scrollY > 100) {
-            el.classList.add('shadow-xl', 'bg-white/95');
-            el.classList.remove('bg-white/70');
-        } else {
-            el.classList.remove('shadow-xl', 'bg-white/95');
-            el.classList.add('bg-white/70');
-        }
-    };
-
-    // Mobile Menu
-    const menuBtn = document.getElementById('menuBtn');
-    const mobileMenu = document.createElement('div');
-    mobileMenu.id = 'mobileMenu';
-    mobileMenu.className = 'hidden fixed inset-0 z-[60] bg-white flex flex-col items-center justify-center gap-8';
-    mobileMenu.innerHTML = `
-        <button id="closeMenu" class="absolute top-10 right-10 text-slate-600"><span class="material-symbols-outlined text-4xl">close</span></button>
-        <a href="#home" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'প্রচ্ছদ' : 'Home' %></a>
-        <a href="#etymology" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'ব্যুৎপত্তি' : 'Etymology' %></a>
-        <a href="#geography" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'ভূগোল' : 'Geography' %></a>
-        <a href="#culture" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'সংস্কৃতি' : 'Culture' %></a>
-        <a href="#history" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'সময়রেখা' : 'Timeline' %></a>
-        <a href="#people" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'ব্যক্তিত্ব' : 'Notable' %></a>
-        <a href="#articles" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'প্রবন্ধ' : 'Articles' %></a>
-        <a href="#gallery" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'গ্যালারি' : 'Gallery' %></a>
-        <a href="#members" class="cinzel-font text-3xl font-bold"><%= lang === 'bn' ? 'সদস্য' : 'Members' %></a>
-    `;
-    document.body.appendChild(mobileMenu);
-    if (menuBtn) {
-        menuBtn.onclick = () => mobileMenu.classList.remove('hidden');
-        document.getElementById('closeMenu').onclick = () => mobileMenu.classList.add('hidden');
-        mobileMenu.querySelectorAll('a').forEach(link => link.onclick = () => mobileMenu.classList.add('hidden'));
-    }
 </script>
-</body>
-</html>
+<%- include('partials/footer') %>

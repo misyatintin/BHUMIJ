@@ -1,0 +1,60 @@
+<!-- Footer -->
+<footer class="relative bg-[#0a111a] pt-32 pb-12 px-6 overflow-hidden">
+    <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(#77B5FE 1px, transparent 1px); background-size: 30px 30px;"></div>
+    <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
+            <!-- Branding -->
+            <div class="space-y-8">
+                <a href="/" class="flex items-center gap-3">
+                    <% if (settingsMap.site_logo?.en) { %>
+                        <img src="/uploads/<%= settingsMap.site_logo.en %>" class="w-12 h-12 object-contain" alt="Logo">
+                    <% } else { %>
+                        <div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+                            <span class="material-symbols-outlined text-white text-3xl">temple_hindu</span>
+                        </div>
+                    <% } %>
+                    <span class="cinzel-font text-2xl font-bold text-white tracking-widest"><%= lang === 'bn' ? 'ভূমিজ' : 'BHUMIJ' %></span>
+                </a>
+                <p class="text-slate-400 font-light leading-relaxed">
+                    <%= lang === 'bn' ? (settingsMap.footer_text?.bn || '') : (settingsMap.footer_text?.en || '') %>
+                </p>
+            </div>
+
+            <!-- Navigation -->
+            <div class="space-y-6">
+                <h4 class="cinzel-font text-lg font-bold text-white uppercase tracking-widest border-b border-primary/20 pb-2 inline-block"><%= lang === 'bn' ? 'দ্রুত লিঙ্ক' : 'Explore' %></h4>
+                <ul class="space-y-4">
+                    <li><a href="/#greetings" class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:w-4 transition-all"></span> <%= lang === 'bn' ? 'শুভেচ্ছা বার্তা' : 'Greetings' %></a></li>
+                    <li><a href="/#articles" class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:w-4 transition-all"></span> <%= lang === 'bn' ? 'প্রবন্ধ' : 'Articles' %></a></li>
+                    <li><a href="/#gallery" class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:w-4 transition-all"></span> <%= lang === 'bn' ? 'গ্যালারি' : 'Gallery' %></a></li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div class="space-y-6">
+                <h4 class="cinzel-font text-lg font-bold text-white uppercase tracking-widest border-b border-primary/20 pb-2 inline-block"><%= lang === 'bn' ? 'যোগাযোগ' : 'Contact' %></h4>
+                <p class="text-slate-400 text-sm leading-relaxed"><%= lang === 'bn' ? (settingsMap.contact_address?.bn || '') : (settingsMap.contact_address?.en || '') %></p>
+            </div>
+
+            <!-- Published By -->
+            <div class="space-y-6">
+                <h4 class="cinzel-font text-lg font-bold text-white uppercase tracking-widest border-b border-primary/20 pb-2 inline-block"><%= lang === 'bn' ? 'প্রকাশক' : 'Published By' %></h4>
+                <p class="text-slate-400 text-sm leading-relaxed"><%= lang === 'bn' ? (settingsMap.prepared_by?.bn || '') : (settingsMap.prepared_by?.en || '') %></p>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                &copy; 2026 <%= lang === 'bn' ? 'পশ্চিমবঙ্গ ভূমিজ উন্নয়ন পর্ষদ — সর্বস্বত্ব সংরক্ষিত' : 'West Bengal Bhumij Development Board — All Rights Reserved' %>
+            </p>
+            <div class="flex items-center gap-3">
+                <a href="/admin" class="text-[10px] font-bold text-slate-500 uppercase tracking-widest hover:text-primary transition-colors">Admin</a>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

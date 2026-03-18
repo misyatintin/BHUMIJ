@@ -290,15 +290,49 @@ router.get('/settings', authRequired, async (req, res) => {
     res.render('admin/settings', { title: 'Site Settings', settings: rows, success: req.query.success });
 });
 
-router.post('/settings/save', authRequired, async (req, res) => {
-    const { keys, values_en, values_bn } = req.body;
-    if (Array.isArray(keys)) {
-        for (let i = 0; i < keys.length; i++) {
-            await pool.query('UPDATE site_settings SET setting_value_en=?, setting_value_bn=? WHERE setting_key=?',
-                [values_en[i], values_bn[i], keys[i]]);
+router.post('/settings/save', authRequired, upload.fields([{ name: 'site_logo', maxCount: 1 }, { name: 'site_favicon', maxCount: 1 }]), async (req, res) => {
+    try {
+        const { keys, values_en, values_bn } = req.body;
+        
+        // Handle text settings
+        if (keys) {
+            const keysArr = Array.isArray(keys) ? keys : [keys];
+            const valuesEnArr = Array.isArray(values_en) ? values_en : [values_en];
+            const valuesBnArr = Array.isArray(values_bn) ? values_bn : [values_bn];
+
+            let textIndex = 0;
+            for (let i = 0; i < keysArr.length; i++) {
+                const key = keysArr[i];
+                // Skip logo and favicon in the text value loop as they don't have corresponding values_en/values_bn inputs
+                if (key === 'site_logo' || key === 'site_favicon') continue;
+                
+                if (valuesEnArr[textIndex] !== undefined && valuesBnArr[textIndex] !== undefined) {
+                    await pool.query('UPDATE site_settings SET setting_value_en=?, setting_value_bn=? WHERE setting_key=?',
+                        [valuesEnArr[textIndex], valuesBnArr[textIndex], key]);
+                }
+                textIndex++;
+            }
         }
+
+        // Handle Logo
+        if (req.files['site_logo']) {
+            const logoPath = req.files['site_logo'][0].filename;
+            await pool.query('UPDATE site_settings SET setting_value_en=?, setting_value_bn=? WHERE setting_key=?',
+                [logoPath, logoPath, 'site_logo']);
+        }
+
+        // Handle Favicon
+        if (req.files['site_favicon']) {
+            const faviconPath = req.files['site_favicon'][0].filename;
+            await pool.query('UPDATE site_settings SET setting_value_en=?, setting_value_bn=? WHERE setting_key=?',
+                [faviconPath, faviconPath, 'site_favicon']);
+        }
+
+        res.redirect('/admin/settings?success=1');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error saving settings');
     }
-    res.redirect('/admin/settings?success=1');
 });
 
 // --- HERO SLIDES ---

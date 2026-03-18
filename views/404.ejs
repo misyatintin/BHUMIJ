@@ -1,18 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Page Not Found</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-<section class="section" style="min-height:100vh;display:flex;align-items:center;justify-content:center;">
-    <div style="text-align:center;">
-        <h1 style="font-size:120px;font-weight:900;background:linear-gradient(135deg,#3b82f6,#f59e0b);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">404</h1>
-        <p style="font-size:20px;color:var(--text-muted);margin-bottom:32px;">Page Not Found</p>
-        <a href="/" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:#3b82f6;color:#fff;border-radius:12px;font-weight:600;">← Go Home</a>
+<%- include('partials/header') %>
+
+<section class="min-h-[80vh] flex items-center justify-center px-6">
+    <div class="text-center max-w-xl mx-auto py-32">
+        <h1 class="cinzel-font text-9xl font-black text-gradient opacity-20">404</h1>
+        <div class="relative -mt-16">
+            <h2 class="cinzel-font text-4xl font-bold text-dark-slate mb-6"><%= lang === 'bn' ? 'পাতাটি পাওয়া যায়নি' : 'Page Not Found' %></h2>
+            <p class="text-slate-500 font-light text-lg mb-12">
+                <%= lang === 'bn' ? 'দুঃখিত, আপনি যে পাতাটি খুঁজছেন সেটি সরানো হয়েছে অথবা এটি আর বিদ্যমান নেই।' : 'The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.' %>
+            </p>
+            <a href="/" class="inline-flex items-center gap-3 px-10 py-4 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:scale-105 hover:shadow-2xl hover:shadow-primary/30 transition-all group">
+                <span class="material-symbols-outlined group-hover:-translate-x-2 transition-transform">arrow_back</span>
+                <%= lang === 'bn' ? 'প্রচ্ছদে ফিরে যান' : 'Back to Home' %>
+            </a>
+        </div>
     </div>
 </section>
-</body>
-</html>
+
+<%- include('partials/footer') %>
+
