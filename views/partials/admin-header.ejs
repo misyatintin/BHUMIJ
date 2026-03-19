@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %> - Bhumij CMS Admin</title>
+    <title><%= title %> - Bhumij CMS</title>
+    <% if (typeof settingsMap !== 'undefined' && settingsMap.site_favicon && settingsMap.site_favicon.en) { %>
+        <link rel="icon" type="image/x-icon" href="/uploads/<%= settingsMap.site_favicon.en %>">
+    <% } %>
     <link rel="icon" type="image/png" href="/uploads/<%= settingsMap.site_favicon?.en || 'favicon.png' %>">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap" rel="stylesheet">
@@ -14,15 +17,27 @@
 </head>
 <body>
     <div class="admin-wrapper">
+        <style>
+        .sidebar { -webkit-overflow-scrolling: touch; }
+        .sidebar-overlay { user-select: none; -webkit-tap-highlight-color: transparent; }
+    </style>
+        <!-- Sidebar Overlay (Mobile) -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
+            <div class="sidebar-mobile-header lg:hidden">
+                <button class="close-sidebar" onclick="toggleSidebar()">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
             <div class="sidebar-header">
-                <% if (settingsMap.site_logo?.en) { %>
-                    <img src="/uploads/<%= settingsMap.site_logo.en %>" style="width: 40px; height: 40px; object-fit: contain; margin-right: 10px;">
+                <% if (typeof settingsMap !== 'undefined' && settingsMap.site_logo && settingsMap.site_logo.en) { %>
+                    <img src="/uploads/<%= settingsMap.site_logo.en %>" style="height:32px; width:auto; border-radius:4px; margin-right:12px; background: white; padding: 2px;">
                 <% } else { %>
-                    <span class="material-symbols-outlined logo-icon">temple_hindu</span>
+                    <span class="material-symbols-outlined logo-icon">admin_panel_settings</span>
                 <% } %>
-                <h2>Bhumij <span>CMS</span></h2>
+                <h2>Bhumij<span>CMS</span></h2>
             </div>
             <nav class="sidebar-nav">
                 <a href="/admin" class="nav-item <%= title === 'Dashboard' ? 'active' : '' %>">
@@ -92,7 +107,7 @@
         <!-- Main Content -->
         <main class="main-content">
             <header class="top-bar">
-                <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+                <button class="menu-toggle" onclick="toggleSidebar()">
                     <span class="material-symbols-outlined">menu</span>
                 </button>
                 <h1 class="page-title"><%= title %></h1>
@@ -102,3 +117,17 @@
                 </div>
             </header>
             <div class="content-area">
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('active');
+        if (sidebar.classList.contains('open')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    }
+</script>

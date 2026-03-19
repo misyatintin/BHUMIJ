@@ -126,76 +126,39 @@
             <div class="lg:col-span-7 relative group w-full">
                 <div class="relative bg-white p-6 md:p-12 rounded-[40px] md:rounded-[60px] shadow-2xl border border-blue-50 overflow-hidden">
                     <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(119,181,254,0.08)_0%,_transparent_75%)] pointer-events-none"></div>
-                    <div id="mapWrapper" class="relative z-10 filter drop-shadow-2xl max-w-full flex-grow flex items-center justify-center">
-                        <svg viewBox="0 0 800 650" class="w-full max-h-[500px] h-auto transition-transform duration-1000 group-hover:scale-[1.02]">
-                            <!-- Professional Detailed Map of East India (Jharkhand, WB, OR, BR, CH) -->
-                            <g class="map-layers opacity-40">
-                                <!-- Base Region Context (Simplified but accurate relative positions) -->
-                                <path d="M220 180 L350 140 L450 150 L580 120 L680 150 L750 250 L730 400 L650 500 L500 580 L300 560 L180 430 L160 300 Z" fill="#f8fafc" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 4"/>
-                                
-                                <!-- State Boundaries (Simulated Professional Detail) -->
-                                <path d="M300 250 Q 320 200 380 180 T 450 200 T 500 280 T 420 350 T 320 320 Z" fill="rgba(43, 130, 238, 0.05)" stroke="#2b82ee" stroke-width="0.5" id="path-jh"/>
-                                <path d="M480 220 Q 520 200 600 220 T 650 300 T 550 450 T 480 350 Z" fill="rgba(43, 130, 238, 0.02)" stroke="#2b82ee" stroke-width="0.5" id="path-wb"/>
-                                <path d="M250 350 Q 300 380 350 500 T 450 550 T 520 500 T 400 400 Z" fill="rgba(43, 130, 238, 0.02)" stroke="#2b82ee" stroke-width="0.5" id="path-or"/>
-                            </g>
-                            
-                            <% 
-                            // Precise Projection Logic for East India
-                            // Min/Max Lat/Lng bounded to Jharkhand, WB, Odisha, NE
-                            const minLat = 17, maxLat = 28;
-                            const minLng = 81, maxLng = 95;
-                            const svgW = 800, svgH = 650;
-                            
-                            geoStates.forEach(s => { 
-                                let px = s.text_x;
-                                let py = s.text_y;
-                                
-                                // Override with real Lat/Long if provided
-                                if (s.latitude && s.longitude) {
-                                    px = ((s.longitude - minLng) / (maxLng - minLng)) * svgW;
-                                    py = ((maxLat - s.latitude) / (maxLat - minLat)) * svgH;
-                                }
-                            %>
-                            <g id="state-<%= s.state_code %>" class="state-group cursor-pointer transition-all duration-500" onmouseenter="activateState('<%= s.state_code %>', true)" onmouseleave="deactivateState('<%= s.state_code %>')">
-                                <% if (s.svg_path) { %>
-                                    <path d="<%= s.svg_path %>" fill="#e2e8f0" stroke="#334155" stroke-width="1.5" class="transition-colors duration-500 hover:fill-primary/30"/>
-                                <% } %>
-                                <!-- Pin Positioned by Real Coordinates -->
-                                <g class="pin-container">
-                                    <circle cx="<%= px %>" cy="<%= py %>" r="8" fill="#2b82ee" class="animate-pulse shadow-lg"/>
-                                    <circle cx="<%= px %>" cy="<%= py %>" r="16" fill="none" stroke="#2b82ee" stroke-opacity="0.3" class="animate-ping"/>
-                                    
-                                    <text x="<%= px %>" y="<%= py - 15 %>" font-size="12" fill="#0f172a" font-weight="900" text-anchor="middle" class="cinzel-font pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <%= s.state_code.toUpperCase() %>
-                                    </text>
-                                    
-                                    <g class="pop-tooltip opacity-0 transition-opacity duration-300 pointer-events-none">
-                                        <rect x="<%= px - 45 %>" y="<%= py - 45 %>" width="100" height="25" rx="5" fill="#1e293b"/>
-                                        <text x="<%= px %>" y="<%= py - 28 %>" font-size="10" fill="#ffffff" font-weight="700" text-anchor="middle">
-                                            <%= lang === 'bn' ? 'জনসংখ্যা' : 'Pop' %>: <%= (lang === 'bn' ? (s.population_bn || s.population) : s.population) || 'N/A' %>
-                                        </text>
-                                    </g>
-                                </g>
-                            </g>
-                            <% }) %>
-                        </svg>
+                    <div id="mapWrapper" class="relative z-10 glass-card rounded-[40px] overflow-hidden border-8 border-white p-4 h-[500px] w-full shadow-2xl transition-all duration-700 hover:scale-[1.01]">
+                        <div id="geoRealMap" class="w-full h-full rounded-[20px] shadow-inner relative z-10"></div>
+                        <div class="absolute top-8 left-8 z-[20] flex flex-col gap-2">
+                            <button onclick="changeMapStyle('streets')" class="p-3 bg-white/90 hover:bg-primary hover:text-white rounded-xl shadow-lg shadow-black/10 backdrop-blur-md transition-all flex items-center justify-center group">
+                                <span class="material-symbols-outlined text-sm">map</span>
+                            </button>
+                            <button onclick="changeMapStyle('satellite')" class="p-3 bg-white/90 hover:bg-primary hover:text-white rounded-xl shadow-lg shadow-black/10 backdrop-blur-md transition-all flex items-center justify-center group">
+                                <span class="material-symbols-outlined text-sm">satellite_alt</span>
+                            </button>
+                        </div>
                     </div>
-                    <div class="mt-8 lg:absolute lg:bottom-10 lg:left-10 p-6 glass-card rounded-3xl shadow-xl max-w-sm border-blue-100/50 z-20">
+                    <div id="mapInfoCard" class="opacity-0 translate-y-4 pointer-events-none mt-8 lg:absolute lg:bottom-10 lg:left-10 p-6 glass-card rounded-3xl shadow-xl max-w-sm border-white/40 z-30 min-h-[160px] flex flex-col justify-center transition-all duration-500">
                         <div class="flex items-center gap-3 mb-3">
                             <div class="w-2 h-8 bg-primary rounded-full"></div>
                             <h4 id="mapTitle" class="cinzel-font font-bold text-dark-slate text-lg uppercase tracking-widest"><%= lang === 'bn' ? 'পূর্বাঞ্চলীয় কেন্দ্রভূমি' : 'Eastern Heartland' %></h4>
                         </div>
                         <p id="mapDesc" class="text-sm text-slate-500 leading-relaxed font-light mb-4"><%= lang === 'bn' ? 'ভূমিজ উপজাতির প্রধান বসতি করিডোর প্রদর্শনকারী ইন্টারেক্টিভ হেরিটেজ মানচিত্র। অঞ্চলগুলোর উপর হোভার করুন।' : 'Interactive heritage map showcasing the primary settlement corridors of the Bhumij tribe. Hover over regions to explore.' %></p>
                         
-                        <div id="mapImgContainer" class="hidden overflow-hidden rounded-2xl border-2 border-primary/10 shadow-lg">
-                            <img id="mapInfoImg" src="" class="w-full h-32 object-cover">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-[10px] font-black uppercase tracking-widest text-primary px-3 py-1 bg-primary/10 rounded-full">
+                                <%= lang === 'bn' ? 'জনসংখ্যা' : 'Population' %>: <span id="mapPop">--</span>
+                            </span>
+                        </div>
+
+                        <div id="mapImgContainer" class="hidden overflow-hidden rounded-2xl border-2 border-primary/10 shadow-lg mt-auto">
+                            <img id="mapInfoImg" src="" class="w-full h-32 object-contain bg-slate-50">
                         </div>
                     </div>
                 </div>
             </div>
             <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 perspective-1000">
                 <% geoStates.forEach((s, i) => { %>
-                <div id="card-<%= s.state_code %>" class="tilt-card group relative h-[280px] md:h-[320px] rounded-[40px] overflow-hidden shadow-xl border border-white hover:border-primary/20 transition-all cursor-pointer <%= i % 2 !== 0 ? 'mt-0 sm:mt-12' : '' %>" onmouseenter="activateState('<%= s.state_code %>', false)" onmouseleave="deactivateState('<%= s.state_code %>')">
+                <div id="card-<%= s.state_code %>" class="tilt-card group relative h-[280px] md:h-[320px] rounded-[40px] overflow-hidden shadow-xl border border-white hover:border-primary/20 transition-all cursor-pointer" onmouseenter="activateState('<%= s.state_code %>', false)" onclick="activateState('<%= s.state_code %>', false)" onmouseleave="deactivateState('<%= s.state_code %>')">
                     <% if (s.image_path) { %>
                     <img src="/uploads/<%= s.image_path %>" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     <% } else { %>
@@ -643,6 +606,23 @@
     const stopAutoScroll = () => {
         if (scrollInterval) clearInterval(scrollInterval);
     };
+    function deactivateState(id) {
+        const micard = document.getElementById('mapInfoCard');
+        if (micard) {
+            micard.classList.add('opacity-0', 'translate-y-4');
+        }
+        document.querySelectorAll('.tilt-card').forEach(el => el.classList.remove('ring-4', 'ring-primary/20', 'scale-105'));
+        // Reset all markers
+        document.querySelectorAll('.custom-marker > div').forEach(el => {
+            el.classList.remove('bg-red-500', 'border-red-500', 'scale-125');
+            el.classList.add('bg-primary/20', 'border-primary');
+            if (el.querySelector('div')) {
+                el.querySelector('div').classList.remove('bg-red-500');
+                el.querySelector('div').classList.add('bg-primary');
+            }
+        });
+    }
+
     const galleryProgress = document.getElementById('galleryProgress');
     const updateProgress = () => {
         if (!galleryGrid || !galleryProgress) return;
@@ -662,26 +642,94 @@
     const stateDataEl = document.getElementById('stateDataMap');
     const stateData = stateDataEl ? JSON.parse(stateDataEl.dataset.json) : {};
 
-    function activateState(id, shouldScroll = true) {
-        document.querySelectorAll('.state-group').forEach(el => el.classList.remove('state-active'));
-        const stateEl = document.getElementById('state-' + id);
-        if (stateEl) stateEl.classList.add('state-active');
+    // Initialize Real Map (Using Google Maps Tiles)
+    let map;
+    let markers = {};
+    const layers = {
+        streets: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] }),
+        satellite: L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] })
+    };
+
+    function initMap() {
+        if (!document.getElementById('geoRealMap')) return;
+        
+        // Center on East India
+        map = L.map('geoRealMap', {
+            center: [23.5, 87.0],
+            zoom: 6,
+            layers: [layers.satellite], // Default to Satellite for "Real" look
+            zoomControl: false,
+            scrollWheelZoom: false
+        });
+
+        // Add Zoom Control on Bottom Right
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+        // Add Markers from State Data
+        Object.keys(stateData).forEach(code => {
+            const s = stateData[code];
+            if (s.lat && s.lng) {
+                const marker = L.marker([s.lat, s.lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker',
+                        html: `<div id="marker-${code}" class="w-10 h-10 bg-primary/20 backdrop-blur-sm border-2 border-primary rounded-full flex items-center justify-center animate-pulse shadow-lg transition-all"><div class="w-3 h-3 bg-primary rounded-full"></div></div>`
+                    })
+                }).addTo(map);
+                
+                marker.on('mouseover', () => activateState(code, false));
+                marker.on('mouseout', () => deactivateState(code));
+                marker.on('click', () => activateState(code, true));
+                markers[code] = marker;
+            }
+        });
+    }
+
+    function changeMapStyle(style) {
+        if (layers[style]) {
+            Object.values(layers).forEach(layer => map.removeLayer(layer));
+            layers[style].addTo(map);
+        }
+    }
+
+    function activateState(id, shouldFly = true) {
+        const markerEl = document.getElementById('marker-' + id);
+        
+        // Reset all markers
+        document.querySelectorAll('.custom-marker > div').forEach(el => {
+            el.classList.remove('bg-red-500', 'border-red-500', 'scale-125');
+            el.classList.add('bg-primary/20', 'border-primary');
+            el.querySelector('div').classList.remove('bg-red-500');
+            el.querySelector('div').classList.add('bg-primary');
+        });
+
+        if (markerEl) {
+            markerEl.classList.remove('bg-primary/20', 'border-primary');
+            markerEl.classList.add('bg-red-500', 'border-red-500', 'scale-125');
+            markerEl.querySelector('div').classList.remove('bg-primary');
+            markerEl.querySelector('div').classList.add('bg-red-500');
+        }
+
+        if (shouldFly && stateData[id] && stateData[id].lat) {
+            map.flyTo([stateData[id].lat, stateData[id].lng], 8, { duration: 1.5 });
+        }
+
         document.querySelectorAll('.tilt-card').forEach(el => el.classList.remove('ring-4', 'ring-primary/20', 'scale-105'));
         const card = document.getElementById('card-' + id);
         if (card) { 
             card.classList.add('ring-4', 'ring-primary/20', 'scale-105'); 
-            if (shouldScroll) {
-                card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-            }
         }
+        
         if (stateData[id]) {
             const mt = document.getElementById('mapTitle');
             const md = document.getElementById('mapDesc');
+            const mp = document.getElementById('mapPop');
             const mic = document.getElementById('mapImgContainer');
             const mii = document.getElementById('mapInfoImg');
+            const micard = document.getElementById('mapInfoCard');
             
             if (mt) mt.innerText = stateData[id].title;
             if (md) md.innerText = stateData[id].desc;
+            if (mp) mp.innerText = stateData[id].pop || '--';
             
             if (mic && mii && stateData[id].img) {
                 mii.src = '/uploads/' + stateData[id].img;
@@ -689,9 +737,14 @@
             } else if (mic) {
                 mic.classList.add('hidden');
             }
+
+            if (micard) {
+                micard.classList.remove('opacity-0', 'translate-y-4');
+            }
         }
     }
-    function deactivateState(id) {}
+
+    initMap();
 
     // Gallery Filter
     document.querySelectorAll('.gallery-filter').forEach(btn => {

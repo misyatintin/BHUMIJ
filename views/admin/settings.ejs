@@ -4,30 +4,44 @@
     <h3>Site Settings (Bilingual)</h3>
     <form method="POST" action="/admin/settings/save" enctype="multipart/form-data">
         <% settings.forEach(s => { %>
-        <div style="background:#f8fafc;padding:20px;border-radius:12px;margin-bottom:16px;border:1px solid #e2e8f0;">
-            <label style="font-size:13px;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:block"><%= s.setting_key.replace(/_/g, ' ') %></label>
+        <div class="form-group" style="background:#f8fafc;padding:24px;border-radius:16px;border:1px solid #e2e8f0;margin-bottom:24px;">
+            <label style="font-size:14px; margin-bottom:16px;"><%= s.setting_key.replace(/_/g, ' ') %></label>
             <input type="hidden" name="keys" value="<%= s.setting_key %>">
             
             <% if (s.setting_key === 'site_logo' || s.setting_key === 'site_favicon') { %>
-                <div class="form-group">
+                <div class="form-grid">
                     <% if (s.setting_value_en) { %>
-                        <div style="margin-bottom: 15px;">
-                            <label style="font-size:11px; display: block; margin-bottom: 5px;">Current <%= s.setting_key.replace(/_/g, ' ') %>:</label>
-                            <img src="/uploads/<%= s.setting_value_en %>" style="max-height: 50px; border: 1px solid #ddd; padding: 5px; background: #fff;">
+                        <div>
+                            <small>Current Image:</small>
+                            <div style="margin-top:8px; padding:10px; background:#fff; border:1px solid #e2e8f0; border-radius:10px; display:inline-block;">
+                                <img src="/uploads/<%= s.setting_value_en %>" style="max-height: 40px; display:block;">
+                            </div>
                         </div>
                     <% } %>
-                    <input type="file" name="<%= s.setting_key %>" accept="image/*" class="form-control">
-                    <p style="font-size: 10px; color: #64748b; margin-top: 5px;">Upload new <%= s.setting_key.replace(/_/g, ' ') %></p>
+                    <div>
+                        <small>Upload New:</small>
+                        <input type="file" name="<%= s.setting_key %>" accept="image/*" style="margin-top:8px;">
+                    </div>
                 </div>
             <% } else { %>
-                <div class="form-row" style="margin-bottom:0">
-                    <div class="form-group" style="margin-bottom:0"><label style="font-size:11px">English</label><textarea name="values_en" rows="2" style="min-height:60px"><%= s.setting_value_en %></textarea></div>
-                    <div class="form-group" style="margin-bottom:0"><label style="font-size:11px">Bengali</label><textarea name="values_bn" rows="2" style="min-height:60px"><%= s.setting_value_bn %></textarea></div>
+                <div class="form-row">
+                    <div class="form-group" style="margin-bottom:0">
+                        <small>English</small>
+                        <textarea name="values_en" rows="2" style="min-height:80px; margin-top:8px;"><%= s.setting_value_en %></textarea>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0">
+                        <small>Bengali</small>
+                        <textarea name="values_bn" rows="2" style="min-height:80px; margin-top:8px;"><%= s.setting_value_bn %></textarea>
+                    </div>
                 </div>
             <% } %>
         </div>
         <% }) %>
-        <button type="submit" class="btn btn-primary"><span class="material-symbols-outlined">save</span> Save All Settings</button>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" style="flex:none; padding-left:40px; padding-right:40px;">
+                <span class="material-symbols-outlined">save</span> Save All Settings
+            </button>
+        </div>
     </form>
 </div>
 <%- include('../partials/admin-footer') %>

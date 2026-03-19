@@ -1,9 +1,11 @@
 <%- include('../partials/admin-header') %>
 <% if (success) { %><div class="alert alert-success"><span class="material-symbols-outlined">check_circle</span> Saved!</div><% } %>
 <div class="action-bar"><h3 style="font-size:16px;color:#64748b;">Meeting minutes of the Board</h3><a href="/admin/meetings/add" class="btn btn-primary"><span class="material-symbols-outlined">add</span> Add Meeting</a></div>
+<div class="table-responsive">
 <table class="data-table"><thead><tr><th>#</th><th>Date</th><th>Title (EN)</th><th>Order</th><th>Actions</th></tr></thead><tbody>
 <% meetings.forEach(m => { %>
 <tr><td><%= m.meeting_number %></td><td><%= m.meeting_date %></td><td><strong><%= m.title_en %></strong></td><td><%= m.sort_order %></td>
 <td><a href="/admin/meetings/edit/<%= m.id %>" class="btn btn-sm btn-primary">Edit</a> <a href="/admin/meetings/delete/<%= m.id %>" class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</a></td></tr>
 <% }) %></tbody></table>
+</div>
 <%- include('../partials/admin-footer') %>

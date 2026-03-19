@@ -1,9 +1,11 @@
 <%- include('../partials/admin-header') %>
 <% if (success) { %><div class="alert alert-success"><span class="material-symbols-outlined">check_circle</span> Saved!</div><% } %>
 <div class="action-bar"><h3 style="font-size:16px;color:#64748b;">Historical articles, biographies, and editorial content</h3><a href="/admin/articles/add" class="btn btn-primary"><span class="material-symbols-outlined">add</span> Add Article</a></div>
+<div class="table-responsive">
 <table class="data-table"><thead><tr><th>Title (EN)</th><th>Type</th><th>Author</th><th>Order</th><th>Actions</th></tr></thead><tbody>
 <% articles.forEach(a => { %>
 <tr><td><strong><%= a.title_en %></strong></td><td><%= a.article_type %></td><td><%= a.author_en %></td><td><%= a.sort_order %></td>
 <td><a href="/admin/articles/edit/<%= a.id %>" class="btn btn-sm btn-primary">Edit</a> <a href="/admin/articles/delete/<%= a.id %>" class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</a></td></tr>
 <% }) %></tbody></table>
+</div>
 <%- include('../partials/admin-footer') %>

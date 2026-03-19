@@ -1,9 +1,11 @@
 <%- include('../partials/admin-header') %>
 <% if (success) { %><div class="alert alert-success"><span class="material-symbols-outlined">check_circle</span> Saved!</div><% } %>
 <div class="action-bar"><h3 style="font-size:16px;color:#64748b;">Poetry and literature</h3><a href="/admin/poems/add" class="btn btn-primary"><span class="material-symbols-outlined">add</span> Add Poem</a></div>
+<div class="table-responsive">
 <table class="data-table"><thead><tr><th>Title (EN)</th><th>Title (BN)</th><th>Author</th><th>Order</th><th>Actions</th></tr></thead><tbody>
 <% poems.forEach(p => { %>
 <tr><td><strong><%= p.title_en %></strong></td><td><%= p.title_bn %></td><td><%= p.author_en %></td><td><%= p.sort_order %></td>
 <td><a href="/admin/poems/edit/<%= p.id %>" class="btn btn-sm btn-primary">Edit</a> <a href="/admin/poems/delete/<%= p.id %>" class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</a></td></tr>
 <% }) %></tbody></table>
+</div>
 <%- include('../partials/admin-footer') %>
